@@ -1,50 +1,99 @@
-# IME Tambang - Crafting Optimizer
+# IME Tambang - Crafting & Smelting Optimizer (FiveM Roleplay)
 
-Aplikasi berbasis web untuk menghitung dan mengoptimalkan hasil crafting serta smelting dalam game IME Tambang. Alat ini membantu menentukan kombinasi produk yang paling menguntungkan untuk dibuat berdasarkan stok bahan mentah yang dimiliki di inventory.
+Aplikasi kalkulator dan optimasi berbasis web yang dirancang khusus untuk para pemain di server **FiveM IME Roleplay**. Alat ini memecahkan masalah klasik para penambang: **"Dengan stok bahan mentah yang saya miliki saat ini, barang apa saja yang harus saya buat (craft/smelt) untuk mendapatkan keuntungan (profit) bersih yang paling maksimal?"**
 
-## Fitur Utama
+Aplikasi ini menggunakan algoritma pintar (*Greedy Algorithm*) yang secara otomatis memadukan berbagai resep crafting untuk menghasilkan rencana kerja paling cuan dan efisien.
 
-- **Kalkulator Optimasi**: Menghitung kombinasi crafting terbaik (combo) serta estimasi profit dari masing-masing item secara individual berdasarkan stok bahan mentah.
-- **Database Item & Resep**: Menampilkan daftar harga jual bahan mentah, harga produk jadi, dan detail resep untuk setiap item.
-- **Metrik Real-time**: Menampilkan total penjualan, estimasi profit bersih, nilai modal bahan mentah, persentase efisiensi penggunaan bahan, dan jumlah barang yang diproduksi.
-- **Responsif**: Desain antarmuka gelap (dark mode) menggunakan Tailwind CSS yang responsif untuk perangkat mobile maupun desktop.
+---
 
-## Struktur File
+## 🚀 Fitur Utama & Penjelasan untuk Orang Awam
 
-- `index.html`: Berisi struktur UI, styling, dan logika algoritma perhitungan optimasi.
-- `smelting_database.json`: Menyimpan data harga jual mentah, daftar item, kategori, dan resep crafting.
+### 1. 📊 Kalkulator Optimasi (Individual & Combo)
+*   **Optimasi Combo (Rekomendasi)**: Fitur ini secara cerdas mencampurkan beberapa jenis perhiasan/ingot untuk dibuat sekaligus. Algoritma akan menghabiskan stok Anda dengan memilih kombinasi produk yang menghasilkan total profit bersih tertinggi.
+*   **Optimasi Individual**: Menampilkan peringkat barang satu per satu jika Anda hanya ingin fokus membuat 1 jenis barang saja dari awal sampai habis (misal: hanya ingin membuat *Ruby Necklace (Gold)*).
 
-## Cara Menjalankan
+### 2. ⏱️ Batasan Waktu Kerja (Time Limit Constraint)
+*   Anda bisa mengatur berapa lama waktu kerja yang Anda miliki (dalam jam, menit, atau detik). 
+*   Kalkulator akan menghitung strategi pembuatan barang yang paling efisien agar waktu kerja Anda tidak terbuang sia-sia dan tetap menghasilkan profit per detik tertinggi (*Profit-per-second Rate*).
 
-Aplikasi ini tidak memerlukan proses build atau instalasi dependency tambahan. Anda dapat menjalankannya langsung di browser.
+### 3. 📷 Pemindai Gambar Otomatis (OCR Inventory Scanner)
+*   Malas memasukkan angka stok satu per satu? Cukup ambil tangkapan layar (*screenshot*) tas/inventory Anda di dalam game FiveM IME Roleplay, lalu **tarik-lepas (drag-drop)** atau **tempel (Ctrl+V)** gambar tersebut ke area scanner.
+*   Menggunakan teknologi kecerdasan buatan **Tesseract.js**, sistem akan mendeteksi nama barang serta jumlahnya secara otomatis dan langsung mengisinya ke kolom input stok.
 
-### Cara 1: Buka Langsung (Double-Click)
-Cukup buka file `index.html` menggunakan browser pilihan Anda (Chrome, Edge, Firefox, dll).
+### 4. 📂 Sistem Multi-Profil (Simpan Data Stok)
+*   Anda dapat menyimpan data inventory Anda ke dalam beberapa profil penyimpanan lokal (misal: "Stok Tambang Utama", "Stok Cadangan", atau "Stok Milik Teman").
+*   Berguna untuk memantau perkembangan tambang Anda dari hari ke hari tanpa takut kehilangan data inputan saat browser ditutup.
 
-### Cara 2: Menggunakan Local Server (Direkomendasikan)
-Jika Anda menggunakan VS Code, Anda bisa menggunakan ekstensi **Live Server**. Atau, jalankan server statis sederhana via terminal:
+### 5. 🎨 Antarmuka Modern & Responsif
+*   Desain antarmuka gelap (*dark mode*) premium dengan efek *glassmorphic* yang nyaman di mata.
+*   Tampilan responsif yang ramah diakses melalui Handphone (mobile) maupun PC/Desktop.
+*   Dilengkapi tombol **Salin Ringkasan Teks** dan **Ekspor Gambar PNG** untuk membagikan rencana kerja hasil kalkulasi ke teman atau grup Discord Anda.
 
-Menggunakan Python:
-```bash
-python -m http.server 8000
-```
-Setelah itu, buka `http://localhost:8000` di browser Anda.
+---
 
-## Konfigurasi Resep & Harga
+## 📁 Struktur Berkas Proyek
 
-Untuk mengubah atau menambah resep baru serta menyesuaikan harga jual item, Anda dapat mengedit file `smelting_database.json` secara langsung. Format data di dalam JSON adalah sebagai berikut:
+*   [index.html](file:///c:/Users/joguri/Documents/Ime%20Tambang/index.html): Berisi seluruh struktur antarmuka (UI), gaya visual (CSS), dan logika pemrograman algoritma optimasi (JavaScript).
+*   [smelting_database.json](file:///c:/Users/joguri/Documents/Ime%20Tambang/smelting_database.json): Berisi database resep, harga bahan mentah (raw), harga jual produk akhir, durasi kerja, dan jumlah langkah pemrosesan crafting.
 
-- `raw_sell_prices`: Harga jual jika bahan mentah langsung dijual tanpa di-craft.
-- `items`: Daftar item beserta kategori dan harga jualnya.
-- `recipes`: Detail bahan yang dibutuhkan untuk membuat suatu item.
+---
 
-## Kontribusi
+## ⚙️ Menyesuaikan Resep & Harga Jual
 
-Kontribusi untuk perbaikan bug, penambahan resep baru, atau peningkatan performa algoritma optimasi sangat diapresiasi. Silakan ikuti langkah-langkah di bawah ini untuk mulai berkontribusi:
+Jika di server FiveM IME Roleplay terjadi perubahan harga pasar atau resep crafting, Anda tidak perlu mengubah kode pemrograman. Cukup edit berkas database [smelting_database.json](file:///c:/Users/joguri/Documents/Ime%20Tambang/smelting_database.json):
 
-1. Fork repository ini.
-2. Buat branch baru untuk fitur atau perbaikan Anda (`git checkout -b feature/fitur-baru` atau `git checkout -b fix/perbaikan-bug`).
-3. Lakukan perubahan kode. Jika Anda mengubah database, pastikan struktur JSON tetap valid.
-4. Lakukan commit dengan pesan yang jelas (`git commit -m "Menambahkan resep baru"`).
-5. Push perubahan Anda ke branch di repository hasil fork (`git push origin feature/fitur-baru`).
-6. Buka halaman repository asli dan buat Pull Request.
+*   `raw_sell_prices`: Mengubah harga jual mentah utama (jika dijual langsung tanpa diolah).
+*   `items`: Mengubah kategori, harga jual produk jadi, durasi crafting (`processing_time`), durasi total (`processing_time_raw`), dan langkah proses (`processing_steps`).
+*   `recipes`: Mengubah bahan-bahan yang dibutuhkan untuk membuat suatu item.
+
+---
+
+## 💻 Cara Membuka & Menjalankan Aplikasi
+
+Aplikasi ini bersifat *client-side* (tidak memerlukan database server eksternal), sehingga sangat mudah dijalankan.
+
+### Cara 1: Akses Langsung Online (GitHub Pages)
+Anda bisa langsung membuka aplikasi ini di browser internet tanpa mengunduh berkas apa pun lewat tautan resmi berikut:
+🔗 **[https://iru9o.github.io/Ime-Tambang/](https://iru9o.github.io/Ime-Tambang/)**
+
+---
+
+### Cara 2: Menjalankan Secara Lokal (Offline)
+Jika Anda mengunduh source code proyek ini di komputer Anda, gunakan salah satu metode berikut:
+
+#### A. Membuka File Langsung (Double-Click)
+1.  Buka folder proyek hasil unduhan.
+2.  Klik dua kali pada file [index.html](file:///c:/Users/joguri/Documents/Ime%20Tambang/index.html).
+3.  Aplikasi akan langsung terbuka di browser Anda (Chrome, Edge, Firefox, dll).
+
+#### B. Menggunakan Local Server (Direkomendasikan untuk pengembangan)
+Untuk menghindari kendala pembatasan keamanan beberapa fitur browser saat membaca database JSON lokal, disarankan menggunakan web server statis sederhana:
+
+*   **VS Code**: Gunakan ekstensi **Live Server**, lalu klik tombol *Go Live* di kanan bawah editor.
+*   **Python**: Jalankan perintah berikut di terminal/PowerShell di dalam direktori proyek:
+    ```bash
+    python -m http.server 8000
+    ```
+    Setelah itu, akses aplikasinya di alamat **`http://localhost:8000`**.
+
+---
+
+## 🤝 Panduan Kontribusi
+
+Kontribusi untuk perbaikan bug, pembaruan resep, atau peningkatan visual sangat kami hargai.
+
+1.  Lakukan **Fork** pada repository GitHub proyek ini (`https://github.com/iru9o/Ime-Tambang`).
+2.  Buat branch fitur baru Anda di lokal komputer:
+    ```bash
+    git checkout -b feature/fitur-keren-baru
+    ```
+3.  Lakukan perubahan kode Anda. (Pastikan database JSON tetap memiliki format sintaks yang valid).
+4.  Lakukan commit perubahan Anda dengan pesan yang jelas:
+    ```bash
+    git commit -m "Menambahkan resep baru perhiasan Diamond Gold"
+    ```
+5.  Push branch Anda ke repository fork di GitHub:
+    ```bash
+    git push origin feature/fitur-keren-baru
+    ```
+6.  Buka repository asli kami di GitHub dan buat **Pull Request (PR)**.

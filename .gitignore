@@ -1,0 +1,13 @@
+# Ignore everything by default
+*
+
+# Allow directories to traverse paths
+!*/
+
+# Whitelist allowed project files
+!index.html
+!README.md
+!smelting_database.json
+
+# Whitelist gitignore itself
+!.gitignore
