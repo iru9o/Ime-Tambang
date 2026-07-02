@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IME Tambang - Crafting Optimizer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        void: '#0D1117',
+                        surface: '#161B22',
+                        elevated: '#1C2128',
+                        border: 'rgba(139, 148, 158, 0.12)',
+                        teal: {
+                            400: '#2DD4BF',
+                            500: '#14B8A6',
+                            600: '#0D9488',
+                        },
+                        gold: {
+                            400: '#FBBF24',
+                            500: '#F59E0B',
+                        },
+                        txt: {
+                            primary: '#E6EDF3',
+                            secondary: '#C9D1D9',
+                            muted: '#8B949E',
+                        },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0D1117;
+            background-image:
+                radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
+        }
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+            appearance: none;
+        }
+        input:focus {
+            box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.4);
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(139, 148, 158, 0.05); }
+        ::-webkit-scrollbar-thumb { background: rgba(139, 148, 158, 0.2); border-radius: 2px; }
+    </style>
+</head>
+
+<body class="text-txt-primary font-sans antialiased h-screen overflow-hidden">
+
+    <!-- Main Container - Full Height -->
+    <div class="h-full flex flex-col max-w-7xl mx-auto">
+
+        <!-- Header - Compact -->
+        <header class="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
+            <!-- Left: Logo + Tabs -->
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-sm font-bold text-txt-primary">IME Tambang</h1>
+                        <p class="text-[9px] text-txt-muted">Crafting Optimizer</p>
+                    </div>
+                </div>
+                <div class="h-6 w-px bg-border mx-1"></div>
+                <nav class="flex gap-1">
+                    <button id="nav-calculator" onclick="switchNav('calculator')" class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                        Calculator
+                    </button>
+                    <button id="nav-iteminfo" onclick="switchNav('iteminfo')" class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated">
+                        Item Info
+                    </button>
+                </nav>
+            </div>
+            <!-- Right: Hitung Button (only visible in Calculator) -->
+            <button id="btn-hitung" onclick="hitungOptimasi()" class="bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-400 hover:to-teal-500 text-white font-semibold px-4 py-2 rounded-lg transition-all flex items-center gap-2 text-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                </svg>
+                Hitung
+            </button>
+        </header>
+
+        <!-- Content Area -->
+        <main class="flex-1 flex flex-col lg:flex-row gap-3 p-3 min-h-0 overflow-hidden">
+
+            <!-- Calculator Panel -->
+            <div id="panel-calculator" class="flex-1 flex flex-col lg:flex-row gap-3 min-h-0">
+
+                <!-- Left Panel: Inventory -->
+                <div class="lg:w-5/12 bg-surface border border-border rounded-xl flex flex-col shrink-0">
+                <div class="px-4 py-2 border-b border-border bg-elevated/50 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        <h2 class="text-xs font-semibold text-txt-primary">Inventory</h2>
+                    </div>
+                    <span id="total-stok" class="text-[10px] text-txt-muted bg-elevated px-2 py-0.5 rounded font-mono">0 items</span>
+                </div>
+
+                <!-- Scrollable Grid Area -->
+                <div class="flex-1 overflow-y-auto p-3 space-y-3">
+                    <!-- Raw Materials -->
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span>
+                            <span class="text-[10px] font-semibold text-txt-muted uppercase tracking-wider">Raw</span>
+                        </div>
+                        <div id="input-grid" class="grid grid-cols-3 gap-2">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Gems -->
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
+                            <span class="text-[10px] font-semibold text-txt-muted uppercase tracking-wider">Gems</span>
+                        </div>
+                        <div id="input-grid-gems" class="grid grid-cols-3 gap-2">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Ingots -->
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+                            <span class="text-[10px] font-semibold text-txt-muted uppercase tracking-wider">Ingots</span>
+                        </div>
+                        <div id="input-grid-ingots" class="grid grid-cols-3 gap-2">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Base -->
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+                            <span class="text-[10px] font-semibold text-txt-muted uppercase tracking-wider">Base</span>
+                        </div>
+                        <div id="input-grid-base" class="grid grid-cols-3 gap-2">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Resources -->
+                    <div>
+                        <div class="flex items-center gap-1.5 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span class="text-[10px] font-semibold text-txt-muted uppercase tracking-wider">Resources</span>
+                        </div>
+                        <div id="input-grid-resources" class="grid grid-cols-2 gap-2">
+                            <!-- Filled by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Results (Side by Side) -->
+            <div class="lg:w-7/12 flex flex-col shrink-0 gap-3">
+                <!-- Individual Panel -->
+                <div class="bg-surface border border-border rounded-xl flex flex-col" style="flex: 1; min-height: 0;">
+                    <div class="px-3 py-2 border-b border-border bg-elevated/50 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                            <h2 class="text-xs font-semibold text-txt-primary">Individual</h2>
+                        </div>
+                        <span id="result-count-individual" class="text-[10px] text-txt-muted bg-elevated px-2 py-0.5 rounded">0 items</span>
+                    </div>
+                    <div id="hasil-individual" class="flex-1 overflow-y-auto p-2">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+
+                <!-- Combo Panel -->
+                <div class="bg-surface border border-border rounded-xl flex flex-col" style="flex: 1; min-height: 0;">
+                    <div class="px-3 py-2 border-b border-border bg-elevated/50 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                            </svg>
+                            <h2 class="text-xs font-semibold text-txt-primary">Combo</h2>
+                        </div>
+                        <span id="result-count" class="text-[10px] text-txt-muted bg-elevated px-2 py-0.5 rounded">0 strategies</span>
+                    </div>
+                    <div id="hasil-combo" class="flex-1 overflow-y-auto p-2">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Info Panel -->
+            <div id="panel-iteminfo" class="flex-1 min-h-0 hidden h-full">
+                <div id="iteminfo-container" class="h-full w-full"></div>
+            </div>
+        </main>
+
+        <!-- Stats Bar - Fixed Bottom -->
+        <div id="stats-bar" class="grid grid-cols-6 gap-2 px-3 pb-3 shrink-0">
+            <div class="bg-surface border border-border rounded-lg px-3 py-2 text-center">
+                <p class="text-[9px] text-txt-muted mb-0.5">Total Penjualan</p>
+                <p id="stat-penjualan" class="text-sm font-bold font-mono text-cyan-400">$0</p>
+            </div>
+            <div class="bg-surface border border-border rounded-lg px-3 py-2 text-center">
+                <p class="text-[9px] text-txt-muted mb-0.5">Profit</p>
+                <p id="stat-profit" class="text-sm font-bold font-mono text-emerald-400">$0</p>
+            </div>
+            <div class="bg-surface border border-border rounded-lg px-3 py-2 text-center">
+                <p class="text-[9px] text-txt-muted mb-0.5">Harga Mentah</p>
+                <p id="stat-modal" class="text-sm font-bold font-mono text-orange-400">$0</p>
+            </div>
+            <div class="bg-surface border border-border rounded-lg px-3 py-2 text-center">
+                <p class="text-[9px] text-txt-muted mb-0.5">Bahan Pakai</p>
+                <p id="stat-used" class="text-sm font-bold font-mono text-teal-400">0%</p>
+            </div>
+            <div class="bg-surface border border-border rounded-lg px-3 py-2 text-center">
+                <p class="text-[9px] text-txt-muted mb-0.5">Produksi</p>
+                <p id="stat-production" class="text-sm font-bold font-mono text-purple-400">0 pcs</p>
+            </div>
+            <div class="bg-surface border border-border rounded-lg px-3 py-2 text-center">
+                <p class="text-[9px] text-txt-muted mb-0.5">Strategi</p>
+                <p id="stat-strategies" class="text-sm font-bold font-mono text-blue-400">0</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ============================================
+        // CONSTANTS
+        // ============================================
+        const STORAGE_KEY = 'imeTambang_inventory';  // Fix #1: single consistent key
+
+        // Fix #10: global CAT_COLORS (was duplicated in two render functions)
+        const CAT_COLORS = {
+            "Raw":       { bg: 'bg-orange-950/50', text: 'text-orange-400', bar: 'bg-orange-500' },
+            "Scraps":    { bg: 'bg-slate-800/50',  text: 'text-slate-400',  bar: 'bg-slate-500' },
+            "Ingots":    { bg: 'bg-gray-800/50',   text: 'text-gray-400',   bar: 'bg-gray-500'  },
+            "Gems":      { bg: 'bg-pink-950/50',   text: 'text-pink-400',   bar: 'bg-pink-500'  },
+            "Base":      { bg: 'bg-cyan-950/50',   text: 'text-cyan-400',   bar: 'bg-cyan-500'  },
+            "Necklaces": { bg: 'bg-yellow-950/50', text: 'text-yellow-400', bar: 'bg-yellow-500' },
+            "Rings":     { bg: 'bg-teal-950/50',   text: 'text-teal-400',   bar: 'bg-teal-500'  },
+            "Earrings":  { bg: 'bg-violet-950/50', text: 'text-violet-400', bar: 'bg-violet-500' }
+        };
+
+        // ============================================
+        // STATE
+        // ============================================
+        let database = null;
+        let itemMap = new Map();      // Fix #5: O(1) name→item lookup
+        let processedItems = [];      // Fix #7: cached filtered items (have ingredients, not Base)
+
+        let rawMaterials = [];
+        let gems = [];
+        let ingots = [];
+        let base = [];
+        let resources = [];
+
+        let currentComboResult = null;
+        let completedComboItems = new Set();
+        let pendingComboItems = new Set();
+        let currentIndividualResult = null;
+        let itemInfoFilter = { category: 'semua', sort: 'margin-desc', search: '' };
+
+        // ============================================
+        // UTILITY
+        // ============================================
+        // Fix #6: debounce helper for search input
+        function debounce(fn, delay) {
+            let timer;
+            return function (...args) {
+                clearTimeout(timer);
+                timer = setTimeout(() => fn.apply(this, args), delay);
+            };
+        }
+
+        // Fix #11: single helper to read all inputs into stokUser object
+        function getStokUser() {
+            const stok = {};
+            [...rawMaterials, ...gems, ...ingots, ...base, ...resources].forEach(mat => {
+                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
+                if (input) stok[mat] = parseInt(input.value) || 0;
+            });
+            return stok;
+        }
+
+        // ============================================
+        // LOAD DATABASE
+        // ============================================
+        async function loadDatabase() {
+            try {
+                // Fix #12: removed ?t=Date.now() cache-busting (not needed for static file)
+                const response = await fetch('smelting_database.json');
+                if (!response.ok) throw new Error('Gagal membaca file JSON: ' + response.status);
+                const rawDb = await response.json();
+
+                // Fix #5: Build recipeMap for O(1) lookup instead of .find() inside .map()
+                const recipeMap = new Map(rawDb.recipes.map(r => [r.name, r.ingredients]));
+
+                database = {
+                    raw_sell_prices: rawDb.raw_sell_prices,
+                    items: rawDb.items.map(item => ({
+                        ...item,
+                        ingredients: recipeMap.get(item.name) || {}
+                    }))
+                };
+
+                // Fix #5: Build O(1) item lookup map
+                itemMap = new Map(database.items.map(i => [i.name, i]));
+
+                // Fix #7: Cache processed items once (items with ingredients, not Base)
+                processedItems = database.items.filter(item =>
+                    item.ingredients && Object.keys(item.ingredients).length > 0 && item.category !== 'Base'
+                );
+
+                // Populate category arrays
+                rawMaterials = rawDb.items.filter(i => i.category === 'Raw').map(i => i.name);
+                gems         = rawDb.items.filter(i => i.category === 'Gems').map(i => i.name);
+                ingots       = rawDb.items.filter(i => i.category === 'Ingots').map(i => i.name);
+                base         = rawDb.items.filter(i => i.category === 'Base').map(i => i.name);
+                resources    = rawDb.items.filter(i => i.category === 'Scraps').map(i => i.name);
+
+                // Fix #9: single renderAllGrids() instead of 5 separate calls
+                renderAllGrids();
+                loadInventoryFromStorage();
+                addInputListeners();
+
+                if (document.getElementById('panel-iteminfo') && !document.getElementById('panel-iteminfo').classList.contains('hidden')) {
+                    renderItemInfo();
+                }
+            } catch (error) {
+                console.error('Error loading database:', error);
+                document.getElementById('input-grid').innerHTML = `
+                    <div class="col-span-3 text-center text-red-400 text-xs py-4">
+                        Gagal memuat database. Pastikan pakai web server lokal.
+                    </div>
+                `;
+            }
+        }
+
+        // ============================================
+        // LOCAL STORAGE
+        // ============================================
+        // Fix #1: removed duplicate STORAGE_KEY const (now declared globally above)
+        // Fix #14: removed dead loadInventory() function (was never called, used wrong key)
+
+        function saveInventoryToStorage() {
+            const inventory = {};
+            [...rawMaterials, ...gems, ...ingots, ...base, ...resources].forEach(mat => {
+                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
+                if (input) inventory[mat] = parseInt(input.value) || 0;
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory));
+        }
+
+        function loadInventoryFromStorage() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const inventory = JSON.parse(saved);
+                    Object.entries(inventory).forEach(([mat, qty]) => {
+                        const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
+                        if (input) input.value = qty;
+                    });
+                }
+            } catch (e) {
+                console.error('No saved inventory:', e);
+            }
+            updateTotalStok();
+        }
+
+        // Fix #8: display "N items" correctly (was showing bare number after initial render)
+        function updateTotalStok() {
+            let totalStok = 0;
+            [...rawMaterials, ...resources].forEach(mat => {
+                const el = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
+                totalStok += el ? (parseInt(el.value) || 0) : 0;
+            });
+            document.getElementById('total-stok').textContent = `${totalStok} items`;
+        }
+
+        function addInputListeners() {
+            [...rawMaterials, ...resources].forEach(mat => {
+                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
+                if (input) {
+                    input.addEventListener('input', () => {
+                        saveInventoryToStorage();
+                        updateTotalStok();
+                    });
+                }
+            });
+        }
+
+        // ============================================
+        // RENDER INPUTS (Generic)
+        // ============================================
+        // Fix #9: replaced 5 near-identical functions with one generic renderer
+        // Fix #4: uses .map().join('') instead of innerHTML += in a loop
+        // Fix #5: uses itemMap.get() for O(1) lookup instead of .find()
+        function renderMaterialGrid(containerId, materials, colorClass, getPriceFn) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = materials.map(mat => {
+                const priceDisplay = getPriceFn ? getPriceFn(mat) : '-';
+                return `
+                    <div class="bg-elevated border border-border rounded-lg p-2 flex flex-col items-center">
+                        <input
+                            type="number"
+                            id="input-${mat.replace(/ /g, '_')}"
+                            value="0"
+                            min="0"
+                            class="w-full bg-void border border-border rounded px-1.5 py-1 text-center font-mono font-semibold text-sm ${colorClass} focus:outline-none"
+                        >
+                        <span class="text-[9px] text-txt-muted mt-1 text-center leading-tight">${mat}</span>
+                        <span class="text-[8px] text-gold-400 font-mono">${priceDisplay}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAllGrids() {
+            renderMaterialGrid('input-grid', rawMaterials, 'text-teal-400', mat => {
+                const p = database.raw_sell_prices[mat];
+                return mat === 'Coal' ? `$${p}` : '-';
+            });
+            renderMaterialGrid('input-grid-gems', gems, 'text-pink-400', mat => {
+                const item = itemMap.get(mat);  // O(1) lookup
+                return item ? `$${item.sell_price}` : '-';
+            });
+            renderMaterialGrid('input-grid-ingots', ingots, 'text-cyan-400', mat => {
+                const item = itemMap.get(mat);  // O(1) lookup
+                return item ? `$${item.sell_price}` : '-';
+            });
+            renderMaterialGrid('input-grid-base', base, 'text-yellow-400', null);
+            renderMaterialGrid('input-grid-resources', resources, 'text-teal-400', mat => {
+                const p = database.raw_sell_prices[mat];
+                return p !== undefined ? `$${p}` : '-';
+            });
+        }
+
+        // ============================================
+        // OPTIMIZATION ALGORITHM
+        // ============================================
+        function hitungProfitPerPcs(strategi) {
+            let modal = 0;
+            for (let [bahan, qty] of Object.entries(strategi.ingredients)) {
+                modal += qty * (database.raw_sell_prices[bahan] || 0);
+            }
+            return strategi.sell_price - modal;
+        }
+
+        // Fix #7: uses cached processedItems instead of re-filtering each call
+        function hitungIndividualRankings(stokUser) {
+            let results = processedItems.map(strategi => {
+                const profitSatuan = hitungProfitPerPcs(strategi);
+
+                let maxBisa = Infinity;
+                let bahanKekurangan = null;
+
+                for (let [bahan, butuhQty] of Object.entries(strategi.ingredients)) {
+                    const tersedia = stokUser[bahan] || 0;
+                    const hitung = Math.floor(tersedia / butuhQty);
+                    if (hitung < maxBisa) {
+                        maxBisa = hitung;
+                        bahanKekurangan = bahan;
+                    }
+                }
+
+                return {
+                    nama: strategi.name,
+                    category: strategi.category,
+                    sellPrice: strategi.sell_price,
+                    profitSatuan,
+                    maxBisa: maxBisa === Infinity ? 9999 : maxBisa,
+                    bahanKekurangan: maxBisa === 0 ? bahanKekurangan : null,
+                    ingredients: strategi.ingredients
+                };
+            });
+
+            results = results.filter(r => r.maxBisa > 0);
+            results.sort((a, b) => b.profitSatuan - a.profitSatuan);
+            return results;
+        }
+
+        // Fix #3: categoryProfit NaN fixed — uses (x || 0) + n pattern
+        // Fix #7: uses cached processedItems
+        // Fix #15: removed unused remainingMaterials variable
+        function hitungComboGreedy(stokUser) {
+            let strategies = processedItems.map(s => ({
+                ...s,
+                profitSatuan: hitungProfitPerPcs(s)
+            }));
+            strategies.sort((a, b) => b.profitSatuan - a.profitSatuan);
+
+            let stokTersisa = { ...stokUser };
+            let comboResults = [];
+            let categoryProfit = {};
+            let totalBahanTerpakai = 0;
+            let totalHargaMentah = 0;
+            const totalBahanAwal = Object.values(stokUser).reduce((s, v) => s + v, 0);
+
+            // Inner helper to avoid code duplication between Phase 1 and Phase 2
+            function processStrategy(strategi) {
+                let maxBisa = Infinity;
+                for (let [bahan, qty] of Object.entries(strategi.ingredients)) {
+                    const hitung = Math.floor((stokTersisa[bahan] || 0) / qty);
+                    if (hitung < maxBisa) maxBisa = hitung;
+                }
+                if (maxBisa <= 0) return;
+
+                const profitTotal = strategi.profitSatuan * maxBisa;
+                let modalStrategi = 0;
+                const rincian = [];
+
+                for (let [bahan, qty] of Object.entries(strategi.ingredients)) {
+                    stokTersisa[bahan] = (stokTersisa[bahan] || 0) - qty * maxBisa;
+                    modalStrategi += qty * (database.raw_sell_prices[bahan] || 0);
+                    rincian.push(`${qty * maxBisa}x ${bahan}`);
+                    totalBahanTerpakai += qty * maxBisa;
+                }
+
+                comboResults.push({
+                    nama: strategi.name,
+                    category: strategi.category,
+                    ingredients: strategi.ingredients,
+                    jumlah: maxBisa,
+                    profitSatuan: strategi.profitSatuan,
+                    profitTotal,
+                    modalTotal: modalStrategi * maxBisa,
+                    rincian: rincian.join(' + ')
+                });
+
+                // Fix #3: safe accumulation — avoids undefined += number → NaN
+                categoryProfit[strategi.category] = (categoryProfit[strategi.category] || 0) + profitTotal;
+                totalHargaMentah += modalStrategi * maxBisa;
+            }
+
+            // Phase 1: profitable strategies first
+            for (let strategi of strategies) {
+                if (strategi.profitSatuan <= 0) continue;
+                processStrategy(strategi);
+            }
+
+            // Phase 2: loss-making strategies to use remaining materials
+            for (let strategi of strategies) {
+                if (strategi.profitSatuan > 0) continue;
+                const usesRemaining = Object.keys(strategi.ingredients)
+                    .some(bahan => (stokTersisa[bahan] || 0) > 0);
+                if (usesRemaining) processStrategy(strategi);
+            }
+
+            const totalProfit = comboResults.reduce((s, i) => s + i.profitTotal, 0);
+            const totalProduksi = comboResults.reduce((s, i) => s + i.jumlah, 0);
+
+            return {
+                strategies: comboResults,
+                summary: {
+                    totalProfit,
+                    totalProduksi,
+                    totalHargaMentah,
+                    percentageUsed: totalBahanAwal > 0 ? Math.round((totalBahanTerpakai / totalBahanAwal) * 100) : 0,
+                    categoryProfit,
+                    remainingMaterials: stokTersisa
+                }
+            };
+        }
+
+
+        // ============================================
+        // NAVIGATION
+        // ============================================
+        function switchNav(tab) {
+            const calcBtn = document.getElementById('nav-calculator');
+            const infoBtn = document.getElementById('nav-iteminfo');
+            const calcLeft = document.querySelector('#panel-calculator .lg\\:w-5\\/12');
+            const calcRight = document.querySelector('#panel-calculator .lg\\:w-7\\/12');
+            const infoPanel = document.getElementById('panel-iteminfo');
+            const statsBar = document.getElementById('stats-bar');
+            const hitungBtn = document.getElementById('btn-hitung');
+
+            if (tab === 'calculator') {
+                calcBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-teal-500/20 text-teal-400 border border-teal-500/30';
+                infoBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated';
+                calcLeft?.classList.remove('hidden');
+                calcRight?.classList.remove('hidden');
+                infoPanel?.classList.add('hidden');
+                statsBar.classList.remove('hidden');
+                hitungBtn?.classList.remove('hidden');
+            } else {
+                infoBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-purple-500/20 text-purple-400 border border-purple-500/30';
+                calcBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated';
+                calcLeft?.classList.add('hidden');
+                calcRight?.classList.add('hidden');
+                infoPanel?.classList.remove('hidden');
+                statsBar.classList.add('hidden');
+                hitungBtn?.classList.add('hidden');
+                if (database) {
+                    renderItemInfo();
+                } else {
+                    document.getElementById('iteminfo-container').innerHTML = '<div class="flex items-center justify-center h-full text-txt-muted p-8">Memuat database...</div>';
+                }
+            }
+        }
+
+        // ============================================
+        // RENDER RESULTS
+        // Fix #2: state tracking integrated directly (no more monkey-patching)
+        // Fix #10: uses global CAT_COLORS constant
+        // Fix #4: uses array .join('') for single batched DOM write
+        // ============================================
+        function renderIndividualResults(results) {
+            currentIndividualResult = results;  // Fix #2: track state here, not via override
+            const container = document.getElementById('hasil-individual');
+
+            document.getElementById('result-count-individual').textContent = `${results.length} items`;
+
+            const profitable = results.filter(r => r.profitSatuan > 0).length;
+            const loss       = results.filter(r => r.profitSatuan < 0).length;
+            const breakEven  = results.filter(r => r.profitSatuan === 0).length;
+
+            const parts = [`
+                <div class="mb-3 flex gap-2 text-[9px]">
+                    <span class="px-2 py-1 rounded bg-emerald-950/50 text-emerald-400">${profitable} Profit</span>
+                    <span class="px-2 py-1 rounded bg-slate-800 text-txt-muted">${breakEven} Break-even</span>
+                    <span class="px-2 py-1 rounded bg-red-950/50 text-red-400">${loss} Rugi</span>
+                </div>
+                <div class="space-y-1.5">`
+            ];
+
+            results.forEach((item, i) => {
+                const colors = CAT_COLORS[item.category] || CAT_COLORS["Ingots"];
+                const isProfitable = item.profitSatuan > 0;
+                const isLoss = item.profitSatuan < 0;
+                const borderColor = isLoss ? 'border-red-900/30' : isProfitable ? (i === 0 ? 'border-teal-500/40' : 'border-border') : 'border-slate-700/50';
+                const profitColor = isLoss ? 'text-red-400' : isProfitable ? 'text-emerald-400' : 'text-txt-muted';
+
+                const ingredientsHtml = Object.entries(item.ingredients).map(([bahan, qty]) => {
+                    const isRaw = rawMaterials.includes(bahan);
+                    return `<span class="inline-flex items-center gap-0.5 ${isRaw ? 'text-orange-400' : 'text-emerald-400'}">${qty}x ${bahan}</span>`;
+                }).join('<span class="text-txt-muted mx-1">+</span>');
+
+                parts.push(`
+                    <div class="bg-elevated border ${borderColor} rounded-lg p-2">
+                        <div class="flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] font-mono text-txt-muted w-5">${i + 1}.</span>
+                                <span class="text-[9px] px-1.5 py-0.5 rounded-full font-semibold ${colors.bg} ${colors.text}">${item.category}</span>
+                                ${i === 0 && isProfitable ? '<span class="text-[8px] px-1 py-0.5 rounded bg-teal-950 text-teal-300 font-bold">BEST</span>' : ''}
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] text-txt-muted">Sell: $${item.sellPrice}</span>
+                                <span class="font-mono font-semibold text-[11px] ${profitColor}">${isProfitable ? '+' : ''}$${item.profitSatuan.toFixed(1)}</span>
+                            </div>
+                        </div>
+                        <div class="mt-1.5 text-[10px] text-txt-primary font-medium">${item.nama}</div>
+                        <div class="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[9px]">
+                            <span class="text-txt-muted">Bahan:</span>
+                            ${ingredientsHtml}
+                        </div>
+                        <div class="mt-1 flex items-center justify-between">
+                            <span class="text-[9px] ${item.bahanKekurangan ? 'text-red-400' : 'text-txt-muted'}">
+                                ${item.bahanKekurangan ? `Butuh: ${item.bahanKekurangan}` : `Max: ${item.maxBisa === 9999 ? 'unlimited' : item.maxBisa} pcs`}
+                            </span>
+                        </div>
+                    </div>
+                `);
+            });
+
+            parts.push('</div>');
+            container.innerHTML = parts.join('');
+        }
+
+        function renderComboResults(result) {
+            currentComboResult = result;          // Fix #2: track state here, not via override
+            completedComboItems.clear();
+
+            const container = document.getElementById('hasil-combo');
+            const { summary, strategies } = result;
+
+            const totalPenjualan = summary.totalProfit + summary.totalHargaMentah;
+            document.getElementById('stat-penjualan').textContent  = `$${totalPenjualan.toLocaleString()}`;
+            document.getElementById('stat-profit').textContent     = `$${summary.totalProfit.toLocaleString()}`;
+            document.getElementById('stat-modal').textContent      = `$${summary.totalHargaMentah.toLocaleString()}`;
+            document.getElementById('stat-used').textContent       = `${summary.percentageUsed}%`;
+            document.getElementById('stat-production').textContent = `${summary.totalProduksi}`;
+            document.getElementById('stat-strategies').textContent = strategies.length;
+            document.getElementById('result-count').textContent    = `${strategies.length} strategies`;
+
+            if (strategies.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center">
+                        <div class="w-12 h-12 rounded-xl bg-red-950/30 flex items-center justify-center mb-2">
+                            <svg class="w-6 h-6 text-red-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-sm font-medium text-txt-secondary mb-1">Tidak Ada Strategi</h3>
+                        <p class="text-[10px] text-txt-muted">Stok tidak mencukupi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const parts = ['<div class="space-y-2">'];
+
+            strategies.forEach((item, i) => {
+                const colors = CAT_COLORS[item.category] || CAT_COLORS["Ingots"];
+                const isProfitable = item.profitSatuan > 0;
+                const isLoss = item.profitSatuan < 0;
+                const isFirst = i === 0 && isProfitable;
+                const borderColor = isLoss ? 'border-red-900/40' : isFirst ? 'border-teal-500/40' : 'border-border';
+                const profitColor = isLoss ? 'text-red-400' : 'text-emerald-400';
+                const statusBadge = isLoss
+                    ? '<span class="text-[8px] px-1 py-0.5 rounded-full font-bold bg-red-950 text-red-300">RUGI</span>'
+                    : isFirst
+                        ? '<span class="text-[8px] px-1 py-0.5 rounded-full font-bold bg-teal-950 text-teal-300">BEST</span>'
+                        : '';
+
+                parts.push(`
+                    <div class="bg-elevated border ${borderColor} rounded-lg p-2.5 cursor-pointer hover:border-purple-500/40 transition-all" data-combo-index="${i}" id="combo-item-${i}">
+                        <div class="flex items-start justify-between gap-2">
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-1.5 mb-0.5">
+                                    <span class="text-[9px] font-mono ${isProfitable ? 'text-emerald-400' : 'text-red-400'}">#${i + 1}</span>
+                                    <span class="text-[8px] px-1.5 py-0.5 rounded-full font-semibold ${colors.bg} ${colors.text}">${item.category}</span>
+                                    ${statusBadge}
+                                    <span class="text-[8px] px-1 py-0.5 rounded-full bg-purple-950/50 text-purple-300" id="combo-status-${i}"></span>
+                                </div>
+                                <h4 class="text-xs font-medium text-txt-primary">${item.nama}</h4>
+                            </div>
+                            <div class="text-right shrink-0">
+                                <p class="text-[9px] text-txt-muted">Total Profit</p>
+                                <p class="font-bold font-mono text-sm ${profitColor}">${isProfitable ? '+' : ''}$${item.profitTotal.toLocaleString()}</p>
+                            </div>
+                        </div>
+                        <div class="mt-2 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[9px]">
+                            <span class="text-txt-muted">Bahan:</span>
+                            ${item.rincian}
+                        </div>
+                        <div class="mt-2 pt-2 border-t border-border/50 grid grid-cols-3 gap-2 text-[10px]">
+                            <div class="flex items-center gap-1">
+                                <span class="text-txt-muted">Jumlah</span>
+                                <span class="text-cyan-400 font-mono font-semibold">${item.jumlah} pcs</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="text-txt-muted">Profit/Pcs</span>
+                                <span class="text-emerald-400 font-mono">+$${item.profitSatuan.toFixed(0)}</span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <span class="text-txt-muted">Modal</span>
+                                <span class="text-orange-400 font-mono">$${item.modalTotal.toLocaleString()}</span>
+                            </div>
+                        </div>
+                    </div>
+                `);
+            });
+
+            parts.push('</div>');
+            container.innerHTML = parts.join('');
+        }
+
+        // ============================================
+        // COMBO ITEM TRACKING
+        // ============================================
+        function confirmAllPending() {
+            if (pendingComboItems.size === 0) return;
+
+            pendingComboItems.forEach(index => {
+                const item = currentComboResult.strategies[index];
+                if (!item) return;
+                completedComboItems.add(index);
+                for (let [bahan, qty] of Object.entries(item.ingredients)) {
+                    const input = document.getElementById('input-' + bahan.replace(/ /g, '_'));
+                    if (input) input.value = Math.max(0, (parseInt(input.value) || 0) - qty * item.jumlah);
+                }
+            });
+
+            saveInventoryToStorage();
+
+            pendingComboItems.forEach(index => {
+                const card  = document.getElementById('combo-item-' + index);
+                const badge = document.getElementById('combo-status-' + index);
+                if (card)  { card.classList.add('opacity-50', 'line-through'); card.classList.remove('border-yellow-500/40', 'hover:border-purple-500/40'); }
+                if (badge) badge.textContent = '✓ DONE';
+            });
+
+            pendingComboItems.clear();
+            hideConfirmButtons();
+            recalculateIndividual();
+        }
+
+        function cancelAllPending() {
+            pendingComboItems.forEach(index => {
+                const card = document.getElementById('combo-item-' + index);
+                if (card) card.classList.remove('border-yellow-500/40');
+            });
+            pendingComboItems.clear();
+            hideConfirmButtons();
+        }
+
+        function showConfirmButtons() {
+            let btns = document.getElementById('confirm-combo-btns');
+            if (!btns) {
+                btns = document.createElement('div');
+                btns.id = 'confirm-combo-btns';
+                btns.className = 'flex gap-2';
+                const resultCount = document.getElementById('result-count');
+                if (resultCount?.parentNode) resultCount.parentNode.insertBefore(btns, resultCount.nextSibling);
+            }
+            btns.innerHTML = `
+                <button onclick="confirmAllPending()" class="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-bold rounded flex items-center gap-1">
+                    <span>✓</span> Confirm
+                </button>
+                <button onclick="cancelAllPending()" class="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold rounded flex items-center gap-1">
+                    <span>✗</span> Cancel
+                </button>
+            `;
+        }
+
+        function hideConfirmButtons() {
+            document.getElementById('confirm-combo-btns')?.remove();
+        }
+
+        function completeComboItem(index) {
+            if (!currentComboResult) return;
+            const item = currentComboResult.strategies[index];
+            if (!item) return;
+
+            if (completedComboItems.has(index)) {
+                completedComboItems.delete(index);
+                for (let [bahan, qty] of Object.entries(item.ingredients)) {
+                    const input = document.getElementById('input-' + bahan.replace(/ /g, '_'));
+                    if (input) input.value = (parseInt(input.value) || 0) + qty * item.jumlah;
+                }
+                const card  = document.getElementById('combo-item-' + index);
+                const badge = document.getElementById('combo-status-' + index);
+                if (card)  { card.classList.remove('opacity-50', 'line-through'); card.classList.add('hover:border-purple-500/40'); }
+                if (badge) badge.textContent = '';
+                saveInventoryToStorage();
+                recalculateIndividual();
+                return;
+            }
+
+            const card = document.getElementById('combo-item-' + index);
+            if (pendingComboItems.has(index)) {
+                pendingComboItems.delete(index);
+                card?.classList.remove('border-yellow-500/40');
+            } else {
+                pendingComboItems.add(index);
+                card?.classList.add('border-yellow-500/40');
+            }
+            pendingComboItems.size > 0 ? showConfirmButtons() : hideConfirmButtons();
+        }
+
+        // Fix #11: uses getStokUser() helper instead of repeating the forEach pattern
+        function recalculateIndividual() {
+            renderIndividualResults(hitungIndividualRankings(getStokUser()));
+        }
+
+        // ============================================
+        // ITEM INFO
+        // Fix #6: debounced render for search input
+        // Fix #4: uses .map().join('') for batched DOM write
+        // ============================================
+        const debouncedRenderItemInfo = debounce(() => renderItemInfo(), 200);
+
+        function renderItemInfo() {
+            const container = document.getElementById('iteminfo-container');
+            if (!database) return;
+
+            const items = database.items.map(s => {
+                let totalCost = 0;
+                const ingredients = [];
+                for (let [bahan, qty] of Object.entries(s.ingredients)) {
+                    totalCost += qty * (database.raw_sell_prices[bahan] || 0);
+                    ingredients.push({ nama: bahan, qty });
+                }
+                const hasIngredients = ingredients.length > 0;
+                const profit = hasIngredients ? s.sell_price - totalCost : 0;
+                const margin = hasIngredients && totalCost > 0 ? (profit / totalCost * 100) : 0;
+                return { ...s, totalCost, profit, margin, ingredients };
+            });
+
+            let filtered = [...items];
+            if (itemInfoFilter.category !== 'semua') filtered = filtered.filter(i => i.category === itemInfoFilter.category);
+            if (itemInfoFilter.search) {
+                const q = itemInfoFilter.search.toLowerCase();
+                filtered = filtered.filter(i => i.name.toLowerCase().includes(q));
+            }
+            filtered.sort((a, b) => {
+                if (itemInfoFilter.sort === 'margin-desc') return b.margin - a.margin;
+                if (itemInfoFilter.sort === 'margin-asc')  return a.margin - b.margin;
+                if (itemInfoFilter.sort === 'price-desc')  return b.sell_price - a.sell_price;
+                if (itemInfoFilter.sort === 'price-asc')   return a.sell_price - b.sell_price;
+                if (itemInfoFilter.sort === 'profit-desc') return b.profit - a.profit;
+                return a.profit - b.profit;
+            });
+
+            const profitable = items.filter(i => i.profit > 0).length;
+
+            // Derive CSS string from global CAT_COLORS for Item Info card badges
+            const catCss = Object.fromEntries(
+                Object.entries(CAT_COLORS).map(([k, v]) => [k, `${v.bg} ${v.text}`])
+            );
+
+            const catButtons = ['semua','Raw','Ingots','Gems','Base','Earrings','Rings','Necklaces','Scraps'].map(cat => {
+                const active = itemInfoFilter.category === cat;
+                return `<button onclick="itemInfoFilter.category='${cat}';renderItemInfo()"
+                    class="px-2.5 py-1 text-[10px] font-medium rounded-lg transition-all ${active ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'bg-elevated text-txt-muted border border-transparent hover:text-txt-secondary'}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`;
+            }).join('');
+
+            // Fix #4: build item cards with .map().join('') — one DOM write
+            const itemCards = filtered.map(item => {
+                const colors = catCss[item.category] || catCss["Ingots"];
+                const isP = item.profit > 0;
+                const reqHtml = item.ingredients.map(ing => {
+                    const isR = rawMaterials.includes(ing.nama);
+                    return `<span class="text-[9px] px-1.5 py-0.5 rounded ${isR ? 'bg-orange-950/50 text-orange-400' : 'bg-slate-800 text-txt-secondary'}">${ing.qty}x ${ing.nama}</span>`;
+                }).join('');
+                return `<div class="bg-elevated border border-border rounded-xl p-3 hover:border-teal-500/30">
+                    <div class="flex justify-between mb-2">
+                        <div>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded font-semibold ${colors}">${item.category}</span>
+                            <h3 class="text-xs font-semibold text-txt-primary mt-1">${item.name}</h3>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold font-mono text-txt-primary">$${item.sell_price}</p>
+                            <p class="text-xs font-bold font-mono ${isP ? 'text-emerald-400' : 'text-red-400'}">${isP ? '+' : ''}$${item.profit.toFixed(0)}</p>
+                        </div>
+                    </div>
+                    <div class="h-1.5 bg-void rounded-full mb-3 overflow-hidden"><div class="h-full ${isP ? 'bg-emerald-500' : 'bg-red-500'} rounded-full" style="width:${Math.min(Math.abs(item.margin), 200) / 3}%"></div></div>
+                    <p class="text-[9px] text-txt-muted uppercase mb-1">Requirements</p>
+                    <div class="flex flex-wrap gap-1 mb-2">${reqHtml}</div>
+                    <div class="flex justify-between pt-2 border-t border-border/50 text-[9px]">
+                        <span><span class="text-txt-muted">Total: </span><span class="text-orange-400 font-mono">$${item.totalCost}</span></span>
+                        <span><span class="text-txt-muted">Margin: </span><span class="${isP ? 'text-emerald-400' : 'text-red-400'} font-mono font-semibold">${item.margin.toFixed(1)}%</span></span>
+                    </div>
+                </div>`;
+            }).join('');
+
+            container.innerHTML = `<div class="bg-surface border border-border rounded-xl flex flex-col h-full overflow-hidden">
+                <div class="px-4 py-3 border-b border-border bg-elevated/50">
+                    <h2 class="text-sm font-bold text-txt-primary mb-3">Item Info &amp; Harga</h2>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <div class="flex-1 min-w-[150px]">
+                            <input type="text" id="item-search" placeholder="Q Cari item..." value="${itemInfoFilter.search}"
+                                class="w-full bg-void border border-border rounded-lg px-3 py-1.5 text-xs text-txt-primary placeholder-txt-muted focus:outline-none focus:border-teal-500"
+                                oninput="itemInfoFilter.search=this.value;debouncedRenderItemInfo()">
+                        </div>
+                        <select id="item-sort" onchange="itemInfoFilter.sort=this.value;renderItemInfo()"
+                            class="bg-void border border-border rounded-lg px-3 py-1.5 text-xs text-txt-primary cursor-pointer">
+                            <option value="margin-desc" ${itemInfoFilter.sort==='margin-desc'?'selected':''}>Margin: Tinggi - Rendah</option>
+                            <option value="margin-asc"  ${itemInfoFilter.sort==='margin-asc'?'selected':''}>Margin: Rendah - Tinggi</option>
+                            <option value="profit-desc" ${itemInfoFilter.sort==='profit-desc'?'selected':''}>Profit: Tinggi - Rendah</option>
+                            <option value="profit-asc"  ${itemInfoFilter.sort==='profit-asc'?'selected':''}>Profit: Rendah - Tinggi</option>
+                            <option value="price-desc"  ${itemInfoFilter.sort==='price-desc'?'selected':''}>Harga: Tinggi - Rendah</option>
+                            <option value="price-asc"   ${itemInfoFilter.sort==='price-asc'?'selected':''}>Harga: Rendah - Tinggi</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-1 flex-wrap">${catButtons}</div>
+                </div>
+                <div class="px-4 py-2 border-b border-border bg-elevated/30 flex gap-3 text-[10px]">
+                    <span class="text-txt-primary"><b>${items.length}</b> TOTAL</span>
+                    <span class="text-emerald-400"><b>${profitable}</b> PROFIT</span>
+                </div>
+                <div class="flex-1 overflow-y-auto p-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">${itemCards}</div>
+                </div>
+            </div>`;
+        }
+
+        // ============================================
+        // MAIN
+        // Fix #11: uses getStokUser() helper
+        // ============================================
+        function hitungOptimasi() {
+            if (!database) { alert('Database belum dimuat!'); return; }
+            const stokUser = getStokUser();
+            renderIndividualResults(hitungIndividualRankings(stokUser));
+            renderComboResults(hitungComboGreedy(stokUser));
+        }
+
+        window.onload = loadDatabase;
+
+        // Fix #1: uses consistent STORAGE_KEY via saveInventoryToStorage()
+        document.addEventListener('input', function(e) {
+            if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
+                saveInventoryToStorage();
+                updateTotalStok();
+            }
+        });
+
+        // Event delegation for combo items (unchanged — already efficient)
+        document.addEventListener('click', function(e) {
+            const comboItem = e.target.closest('[data-combo-index]');
+            if (comboItem) {
+                completeComboItem(parseInt(comboItem.getAttribute('data-combo-index')));
+            }
+        });
+    </script>
+</body>
+
+</html>
