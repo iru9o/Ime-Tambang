@@ -1,0 +1,18 @@
+{
+  "name": "IME Tambang Crafting Optimizer",
+  "short_name": "IME Tambang",
+  "description": "Crafting optimization calculator for IME Tambang game.",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0D1117",
+  "theme_color": "#14B8A6",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "kh_banner.png",
+      "sizes": "1000x500",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

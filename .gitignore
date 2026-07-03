@@ -4,12 +4,16 @@
 # Allow directories to traverse paths
 !*/
 
-# Whitelist allowed project files
+# Whitelist required project files for GitHub
 !index.html
-!README.md
+!ui.js
+!calculator.js
+!ocr.js
 !smelting_database.json
-!docs/
-!docs/**
-
-# Whitelist gitignore itself
+!manifest.json
+!sw.js
+!kh_banner.png
+!README.md
 !.gitignore
+
+

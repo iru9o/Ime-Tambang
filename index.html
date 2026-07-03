@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IME Tambang - Crafting Optimizer</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#14B8A6">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,15 +83,15 @@
     </style>
 </head>
 
-<body class="text-txt-primary font-sans antialiased h-screen overflow-hidden">
+<body class="text-txt-primary font-sans antialiased min-h-screen lg:h-screen overflow-y-auto lg:overflow-hidden">
 
     <!-- Main Container - Full Height -->
-    <div class="h-full flex flex-col max-w-7xl mx-auto">
+    <div class="min-h-screen lg:h-full flex flex-col max-w-[1440px] mx-auto px-3 sm:px-4 lg:px-6">
 
         <!-- Header - Compact -->
-        <header class="flex items-center justify-between px-4 py-2 border-b border-border shrink-0">
+        <header class="flex flex-wrap items-center justify-between gap-y-2 px-3 sm:px-4 py-2 border-b border-border shrink-0">
             <!-- Left: Logo + Tabs -->
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-2 sm:gap-4 max-w-full">
                 <div class="flex items-center gap-2">
                     <div
                         class="w-8 h-8 rounded-lg bg-gradient-to-br from-teal-500 to-teal-600 flex items-center justify-center">
@@ -98,24 +100,24 @@
                                 d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                     </div>
-                    <div>
+                    <div class="hidden sm:block">
                         <h1 class="text-sm font-bold text-txt-primary">IME Tambang</h1>
                         <p class="text-[9px] text-txt-muted">Crafting Optimizer</p>
                     </div>
                 </div>
                 <nav class="flex gap-1.5 items-center">
                     <button id="nav-calculator" onclick="switchNav('calculator')"
-                        class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                        class="px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs font-semibold rounded-lg transition-all bg-teal-500/20 text-teal-400 border border-teal-500/30">
                         Calculator
                     </button>
                     <button id="nav-iteminfo" onclick="switchNav('iteminfo')"
-                        class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated">
+                        class="px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated">
                         Item Info
                     </button>
-                    <div class="h-4 w-px bg-border mx-1"></div>
+                    <div class="hidden md:block h-4 w-px bg-border mx-1"></div>
                     <!-- GitHub Repository Link -->
                     <a href="https://github.com/iru9o/Ime-Tambang" target="_blank" rel="noopener noreferrer"
-                        class="bg-elevated border border-border hover:border-teal-500/30 rounded-lg p-1.5 text-txt-muted hover:text-txt-secondary transition-all flex items-center justify-center"
+                        class="hidden md:flex bg-elevated border border-border hover:border-teal-500/30 rounded-lg p-1.5 text-txt-muted hover:text-txt-secondary transition-all items-center justify-center"
                         title="Buka Repository GitHub">
                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -124,7 +126,7 @@
                     </a>
                     <!-- Discord Profile Button -->
                     <button onclick="openDiscordModal(event)"
-                        class="bg-elevated border border-border hover:border-teal-500/30 rounded-lg p-1.5 text-txt-muted hover:text-txt-secondary transition-all flex items-center justify-center"
+                        class="hidden md:flex bg-elevated border border-border hover:border-teal-500/30 rounded-lg p-1.5 text-txt-muted hover:text-txt-secondary transition-all items-center justify-center"
                         title="Buka Profil Discord">
                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                             <path
@@ -134,7 +136,7 @@
                 </nav>
             </div>
             <!-- Right: Hitung Button + Time Limit (only visible in Calculator) -->
-            <div id="calc-controls" class="flex items-center gap-2">
+            <div id="calc-controls" class="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto justify-end">
                 <!-- Time Limit Inputs -->
                 <div id="time-limit-inputs"
                     class="hidden items-center gap-1 bg-void border border-border rounded-lg px-2.5 py-1.5">
@@ -181,8 +183,20 @@
             <!-- Calculator Panel -->
             <div id="panel-calculator" class="flex-1 flex flex-col lg:flex-row gap-3 min-h-0">
 
+                <!-- Mobile Sub-navigation switcher -->
+                <div id="calculator-subnav" class="lg:hidden flex bg-elevated border border-border rounded-xl p-1 shrink-0 mb-2">
+                    <button id="subnav-inventory" onclick="switchCalculatorTab('inventory')"
+                        class="flex-1 text-center py-2 text-xs font-semibold rounded-lg transition-all bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                        Input Stok
+                    </button>
+                    <button id="subnav-results" onclick="switchCalculatorTab('results')"
+                        class="flex-1 text-center py-2 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary">
+                        Hasil Optimasi
+                    </button>
+                </div>
+
                 <!-- Left Panel: Inventory -->
-                <div class="lg:w-5/12 bg-surface border border-border rounded-xl flex flex-col shrink-0">
+                <div id="panel-inventory" class="w-full lg:w-5/12 bg-surface border border-border rounded-xl flex flex-col flex-1 lg:flex-initial lg:shrink-0 min-h-0">
                     <div class="px-4 py-2 border-b border-border bg-elevated/50 flex items-center justify-between">
                         <div class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -365,7 +379,7 @@
                 </div>
 
                 <!-- Right Panel: Results (Side by Side) -->
-                <div class="lg:w-7/12 flex flex-col shrink-0 gap-3">
+                <div id="panel-results" class="w-full lg:w-7/12 flex flex-col flex-1 lg:flex-initial lg:shrink-0 gap-3 min-h-0">
                     <!-- Individual Panel -->
                     <div id="panel-individual"
                         class="bg-surface border border-border rounded-xl flex flex-col transition-all duration-300"
@@ -482,30 +496,30 @@
         </main>
 
         <!-- Stats Bar - Fixed Bottom -->
-        <div id="stats-bar" class="grid grid-cols-6 gap-2 px-3 pb-3 shrink-0">
-            <div class="bg-surface border border-border rounded-lg px-3 py-2.5 text-center">
-                <p class="text-[10.5px] text-txt-muted mb-0.5">Total Penjualan</p>
-                <p id="stat-penjualan" class="text-base font-bold font-mono text-cyan-400">$0</p>
+        <div id="stats-bar" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 px-3 pb-3 shrink-0">
+            <div class="bg-surface border border-border rounded-lg p-2 sm:px-3 sm:py-2.5 text-center">
+                <p class="text-[9.5px] sm:text-[10.5px] text-txt-muted mb-0.5">Total Penjualan</p>
+                <p id="stat-penjualan" class="text-sm sm:text-base font-bold font-mono text-cyan-400">$0</p>
             </div>
-            <div class="bg-surface border border-border rounded-lg px-3 py-2.5 text-center">
-                <p class="text-[10.5px] text-txt-muted mb-0.5">Profit</p>
-                <p id="stat-profit" class="text-base font-bold font-mono text-emerald-400">$0</p>
+            <div class="bg-surface border border-border rounded-lg p-2 sm:px-3 sm:py-2.5 text-center">
+                <p class="text-[9.5px] sm:text-[10.5px] text-txt-muted mb-0.5">Profit</p>
+                <p id="stat-profit" class="text-sm sm:text-base font-bold font-mono text-emerald-400">$0</p>
             </div>
-            <div class="bg-surface border border-border rounded-lg px-3 py-2.5 text-center">
-                <p class="text-[10.5px] text-txt-muted mb-0.5">Harga Mentah</p>
-                <p id="stat-modal" class="text-base font-bold font-mono text-orange-400">$0</p>
+            <div class="bg-surface border border-border rounded-lg p-2 sm:px-3 sm:py-2.5 text-center">
+                <p class="text-[9.5px] sm:text-[10.5px] text-txt-muted mb-0.5">Harga Mentah</p>
+                <p id="stat-modal" class="text-sm sm:text-base font-bold font-mono text-orange-400">$0</p>
             </div>
-            <div class="bg-surface border border-border rounded-lg px-3 py-2.5 text-center">
-                <p class="text-[10.5px] text-txt-muted mb-0.5">Bahan Pakai</p>
-                <p id="stat-used" class="text-base font-bold font-mono text-teal-400">0%</p>
+            <div class="bg-surface border border-border rounded-lg p-2 sm:px-3 sm:py-2.5 text-center">
+                <p class="text-[9.5px] sm:text-[10.5px] text-txt-muted mb-0.5">Bahan Pakai</p>
+                <p id="stat-used" class="text-sm sm:text-base font-bold font-mono text-teal-400">0%</p>
             </div>
-            <div class="bg-surface border border-border rounded-lg px-3 py-2.5 text-center">
-                <p class="text-[10.5px] text-txt-muted mb-0.5">Produksi</p>
-                <p id="stat-production" class="text-base font-bold font-mono text-purple-400">0 pcs</p>
+            <div class="bg-surface border border-border rounded-lg p-2 sm:px-3 sm:py-2.5 text-center">
+                <p class="text-[9.5px] sm:text-[10.5px] text-txt-muted mb-0.5">Produksi</p>
+                <p id="stat-production" class="text-sm sm:text-base font-bold font-mono text-purple-400">0 pcs</p>
             </div>
-            <div class="bg-surface border border-border rounded-lg px-3 py-2.5 text-center">
-                <p class="text-[10.5px] text-txt-muted mb-0.5">Strategi</p>
-                <p id="stat-strategies" class="text-base font-bold font-mono text-blue-400">0</p>
+            <div class="bg-surface border border-border rounded-lg p-2 sm:px-3 sm:py-2.5 text-center">
+                <p class="text-[9.5px] sm:text-[10.5px] text-txt-muted mb-0.5">Strategi</p>
+                <p id="stat-strategies" class="text-sm sm:text-base font-bold font-mono text-blue-400">0</p>
             </div>
         </div>
 
@@ -593,13 +607,18 @@
 
     </div>
 
+    <!-- Local Javascript Modules -->
+    <script src="ui.js" defer></script>
+    <script src="calculator.js" defer></script>
+    <script src="ocr.js" defer></script>
+
     <script>
         // ============================================
-        // CONSTANTS
+        // CONSTANTS & CONFIGURATION
         // ============================================
-        const STORAGE_KEY = 'imeTambang_inventory';  // Fix #1: single consistent key
+        const STORAGE_KEY = 'imeTambang_inventory';
 
-        // Fix #10: global CAT_COLORS (was duplicated in two render functions)
+        // Color themes for each item category
         const CAT_COLORS = {
             "Raw": { bg: 'bg-orange-950/50', text: 'text-orange-400', bar: 'bg-orange-500' },
             "Scraps": { bg: 'bg-slate-800/50', text: 'text-slate-400', bar: 'bg-slate-500' },
@@ -612,12 +631,13 @@
         };
 
         // ============================================
-        // STATE
+        // GLOBAL STATE
         // ============================================
         let database = null;
-        let itemMap = {};              // O(1) name→item lookup
-        let rawMaterialCostCache = {}; // O(1) cache for recursive raw material costs
-        let processedItems = [];      // Fix #7: cached filtered items (have ingredients, not Base)
+        let itemMap = {};              // Quick lookup by item name
+        let rawMaterialCostCache = {}; // Cache for recursive raw material costs
+        let processedItems = [];      // Cached craftable items (excluding Base category)
+        let recipeMap = {};           // Recipe mapping for expanded stock
 
         let rawMaterials = [];
         let gems = [];
@@ -637,1885 +657,157 @@
         let isComboCollapsed = false;
         let profiles = { "Default": {} };
         let activeProfileName = "Default";
+        let activeCalculatorTab = 'inventory';
 
         // ============================================
-        // UTILITY
-        // ============================================
-        // Fix #6: debounce helper for search input
-        function debounce(fn, delay) {
-            let timer;
-            return function (...args) {
-                clearTimeout(timer);
-                timer = setTimeout(() => fn.apply(this, args), delay);
-            };
-        }
-
-        function formatDuration(sec) {
-            if (sec < 60) return `${sec}s`;
-            const m = Math.floor(sec / 60);
-            const s = sec % 60;
-            return s > 0 ? `${m}m ${s}s` : `${m}m`;
-        }
-
-        function toggleTimeLimit() {
-            isTimeLimitActive = !isTimeLimitActive;
-            const inputs = document.getElementById('time-limit-inputs');
-            const btn = document.getElementById('btn-toggle-time');
-            if (isTimeLimitActive) {
-                inputs.classList.remove('hidden');
-                inputs.classList.add('flex');
-                btn.classList.add('bg-teal-500/20', 'text-teal-400', 'border', 'border-teal-500/30');
-            } else {
-                inputs.classList.remove('flex');
-                inputs.classList.add('hidden');
-                btn.classList.remove('bg-teal-500/20', 'text-teal-400', 'border', 'border-teal-500/30');
-                document.getElementById('limit-h').value = '';
-                document.getElementById('limit-m').value = '';
-                document.getElementById('limit-s').value = '';
-                hitungOptimasi();
-            }
-        }
-
-        function getTimeLimitSeconds() {
-            if (!isTimeLimitActive) return Infinity;
-            const h = parseInt(document.getElementById('limit-h').value) || 0;
-            const m = parseInt(document.getElementById('limit-m').value) || 0;
-            const s = parseInt(document.getElementById('limit-s').value) || 0;
-            const total = (h * 3600) + (m * 60) + s;
-            return total > 0 ? total : Infinity;
-        }
-
-        function addTimeLimitListeners() {
-            ['limit-h', 'limit-m', 'limit-s'].forEach(id => {
-                document.getElementById(id)?.addEventListener('input', () => {
-                    if (isTimeLimitActive) hitungOptimasi();
-                });
-            });
-        }
-
-        function toggleIndividualSort() {
-            sortModeIndividual = (sortModeIndividual === 'profit') ? 'time' : 'profit';
-            const btn = document.getElementById('btn-sort-individual');
-            if (btn) {
-                btn.textContent = sortModeIndividual === 'profit' ? 'Sort: Profit' : 'Sort: Efisiensi';
-            }
-            hitungOptimasi();
-        }
-
-        function toggleComboSort() {
-            sortModeCombo = (sortModeCombo === 'profit') ? 'time' : 'profit';
-            const btn = document.getElementById('btn-sort-combo');
-            if (btn) {
-                btn.textContent = sortModeCombo === 'profit' ? 'Sort: Profit' : 'Sort: Efisiensi';
-            }
-            hitungOptimasi();
-        }
-
-        function toggleIndividualCollapse() {
-            isIndividualCollapsed = !isIndividualCollapsed;
-            const panel = document.getElementById('panel-individual');
-            const body = document.getElementById('hasil-individual');
-            const chevron = document.getElementById('chevron-individual');
-            const sortBtn = document.getElementById('btn-sort-individual');
-
-            if (isIndividualCollapsed) {
-                panel.style.flex = 'none';
-                body.classList.add('hidden');
-                sortBtn.classList.add('hidden');
-                chevron.classList.add('rotate-180');
-            } else {
-                panel.style.flex = '1';
-                panel.style.minHeight = '0';
-                body.classList.remove('hidden');
-                sortBtn.classList.remove('hidden');
-                chevron.classList.remove('rotate-180');
-            }
-        }
-
-        function toggleComboCollapse() {
-            isComboCollapsed = !isComboCollapsed;
-            const panel = document.getElementById('panel-combo');
-            const body = document.getElementById('hasil-combo');
-            const chevron = document.getElementById('chevron-combo');
-            const sortBtn = document.getElementById('btn-sort-combo');
-
-            if (isComboCollapsed) {
-                panel.style.flex = 'none';
-                body.classList.add('hidden');
-                sortBtn.classList.add('hidden');
-                chevron.classList.add('rotate-180');
-            } else {
-                panel.style.flex = '1';
-                panel.style.minHeight = '0';
-                body.classList.remove('hidden');
-                sortBtn.classList.remove('hidden');
-                chevron.classList.remove('rotate-180');
-            }
-        }
-
-        // Fix #11: single helper to read all inputs into stokUser object
-        function getStokUser() {
-            const stok = {};
-            [...rawMaterials, ...gems, ...ingots, ...base, ...resources].forEach(mat => {
-                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
-                if (input) stok[mat] = parseInt(input.value) || 0;
-            });
-            return stok;
-        }
-
-        // ============================================
-        // LOAD DATABASE
+        // DATABASE LOAD
         // ============================================
         async function loadDatabase() {
             try {
-                // Fix #12: removed ?t=Date.now() cache-busting (not needed for static file)
                 const response = await fetch('smelting_database.json');
                 if (!response.ok) throw new Error('Gagal membaca file JSON: ' + response.status);
                 const rawDb = await response.json();
-
-                // Build recipe lookup for O(1) access
-                const recipeLookup = {};
-                rawDb.recipes.forEach(r => { recipeLookup[r.name] = r.ingredients; });
-
-                database = {
-                    raw_sell_prices: rawDb.raw_sell_prices,
-                    items: rawDb.items.map(item => ({
-                        ...item,
-                        ingredients: recipeLookup[item.name] || {}
-                    }))
-                };
-
-                // Build O(1) item lookup
-                itemMap = {};
-                rawMaterialCostCache = {}; // Reset raw material cost cache
-                database.items.forEach(i => { itemMap[i.name] = i; });
-
-                // Cache processed items
-                processedItems = database.items.filter(item =>
-                    item.ingredients && Object.keys(item.ingredients).length > 0 && item.category !== 'Base'
-                );
-
-                // Build recipe map for expanded stock
-                recipeMap = {};
-                database.items.forEach(item => {
-                    if (item.ingredients && Object.keys(item.ingredients).length > 0) {
-                        recipeMap[item.name] = item.ingredients;
-                    }
-                });
-
-                // Populate category arrays
-                rawMaterials = rawDb.items.filter(i => i.category === 'Raw').map(i => i.name);
-                gems = rawDb.items.filter(i => i.category === 'Gems').map(i => i.name);
-                ingots = rawDb.items.filter(i => i.category === 'Ingots').map(i => i.name);
-                base = rawDb.items.filter(i => i.category === 'Base').map(i => i.name);
-                resources = rawDb.items.filter(i => i.category === 'Scraps').map(i => i.name);
-
-                // Fix #9: single renderAllGrids() instead of 5 separate calls
-                renderAllGrids();
-                initProfiles();
-                initOcrListeners();
-                addInputListeners();
-                addTimeLimitListeners();
-
-                if (document.getElementById('panel-iteminfo') && !document.getElementById('panel-iteminfo').classList.contains('hidden')) {
-                    renderItemInfo();
-                }
+                parseAndLoadDatabase(rawDb);
             } catch (error) {
                 console.error('Error loading database:', error);
-                document.getElementById('input-grid').innerHTML = `
-                    <div class="col-span-3 text-center text-red-400 text-xs py-4">
-                        Gagal memuat database. Pastikan pakai web server lokal.
-                    </div>
-                `;
-            }
-        }        // ============================================
-        // PROFIL STOK (SAVE STATE INVENTORY) & LOCAL STORAGE
-        // ============================================
-        function saveInventoryToStorage() {
-            const inventory = getStokUser();
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(inventory));
-
-            if (profiles && activeProfileName) {
-                profiles[activeProfileName] = inventory;
-                localStorage.setItem('ime_tambang_profiles', JSON.stringify(profiles));
-            }
-        }
-
-        function clearAllInventory() {
-            [...rawMaterials, ...gems, ...ingots, ...base, ...resources].forEach(mat => {
-                const inputId = `input-${mat.replace(/ /g, '_')}`;
-                const input = document.getElementById(inputId);
-                if (input) {
-                    input.value = 0;
-                }
-            });
-            saveInventoryToStorage();
-            updateTotalStok();
-        }
-
-        function initProfiles() {
-            try {
-                const storedProfiles = localStorage.getItem('ime_tambang_profiles');
-                const storedActive = localStorage.getItem('ime_tambang_active_profile');
-
-                if (storedProfiles) {
-                    profiles = JSON.parse(storedProfiles);
-                } else {
-                    const savedLegacy = localStorage.getItem(STORAGE_KEY);
-                    let initialStok = {};
-                    if (savedLegacy) {
-                        try {
-                            initialStok = JSON.parse(savedLegacy);
-                        } catch (e) {
-                            console.error(e);
-                        }
-                    }
-                    if (Object.keys(initialStok).length === 0) {
-                        initialStok = getStokUser();
-                    }
-                    profiles = { "Default": initialStok };
-                    localStorage.setItem('ime_tambang_profiles', JSON.stringify(profiles));
-                }
-
-                if (storedActive && profiles[storedActive]) {
-                    activeProfileName = storedActive;
-                } else {
-                    activeProfileName = "Default";
-                    localStorage.setItem('ime_tambang_active_profile', activeProfileName);
-                }
-
-                updateProfileDropdown();
-                applyProfileData(activeProfileName);
-            } catch (e) {
-                console.error("Gagal menginisialisasi profil stok:", e);
-                updateTotalStok();
-            }
-        }
-
-        function updateProfileDropdown() {
-            const select = document.getElementById('profile-select');
-            if (!select) return;
-
-            select.innerHTML = '';
-            Object.keys(profiles).forEach(name => {
-                const opt = document.createElement('option');
-                opt.value = name;
-                opt.textContent = name;
-                if (name === activeProfileName) {
-                    opt.selected = true;
-                }
-                select.appendChild(opt);
-            });
-
-            const deleteBtn = document.getElementById('btn-delete-profile');
-            if (deleteBtn) {
-                if (activeProfileName === 'Default') {
-                    deleteBtn.classList.add('opacity-30', 'cursor-not-allowed');
-                    deleteBtn.setAttribute('disabled', 'true');
-                } else {
-                    deleteBtn.classList.remove('opacity-30', 'cursor-not-allowed');
-                    deleteBtn.removeAttribute('disabled');
-                }
-            }
-        }
-
-        function applyProfileData(profileName) {
-            const data = profiles[profileName] || {};
-            [...rawMaterials, ...gems, ...ingots, ...base, ...resources].forEach(mat => {
-                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
-                if (input) {
-                    input.value = data[mat] !== undefined ? data[mat] : 0;
-                }
-            });
-            updateTotalStok();
-        }
-
-        function saveCurrentProfile() {
-            saveInventoryToStorage();
-
-            const btn = document.getElementById('btn-save-profile');
-            if (btn) {
-                btn.classList.add('border-emerald-500/50', 'text-emerald-400', 'bg-emerald-500/10');
-                btn.classList.remove('hover:border-teal-500/30', 'text-txt-muted');
-                setTimeout(() => {
-                    btn.classList.remove('border-emerald-500/50', 'text-emerald-400', 'bg-emerald-500/10');
-                    btn.classList.add('hover:border-teal-500/30', 'text-txt-muted');
-                }, 800);
-            }
-        }
-
-        function switchProfile(newProfileName) {
-            if (newProfileName === activeProfileName) return;
-            saveCurrentProfile();
-
-            activeProfileName = newProfileName;
-            localStorage.setItem('ime_tambang_active_profile', activeProfileName);
-
-            updateProfileDropdown();
-            applyProfileData(activeProfileName);
-            hitungOptimasi();
-        }
-
-        function enterCreateProfileMode() {
-            document.getElementById('profile-view-mode').classList.add('hidden');
-            document.getElementById('profile-create-mode').classList.remove('hidden');
-            document.getElementById('profile-create-mode').classList.add('flex');
-            const input = document.getElementById('profile-new-name');
-            if (input) {
-                input.value = '';
-                input.focus();
-            }
-        }
-
-        // Batal
-        function exitCreateProfileMode() {
-            document.getElementById('profile-create-mode').classList.remove('flex');
-            document.getElementById('profile-create-mode').classList.add('hidden');
-            document.getElementById('profile-view-mode').classList.remove('hidden');
-        }
-
-        function confirmCreateProfile() {
-            const input = document.getElementById('profile-new-name');
-            if (!input) return;
-            const newName = input.value.trim();
-            if (!newName) {
-                alert("Nama profil tidak boleh kosong!");
-                return;
-            }
-            if (profiles[newName]) {
-                alert("Nama profil sudah ada!");
-                return;
-            }
-
-            saveCurrentProfile();
-
-            profiles[newName] = getStokUser();
-            localStorage.setItem('ime_tambang_profiles', JSON.stringify(profiles));
-
-            activeProfileName = newName;
-            localStorage.setItem('ime_tambang_active_profile', activeProfileName);
-
-            updateProfileDropdown();
-            exitCreateProfileMode();
-            hitungOptimasi();
-        }
-
-        function deleteActiveProfile() {
-            if (activeProfileName === 'Default') return;
-            if (!confirm(`Apakah Anda yakin ingin menghapus profil "${activeProfileName}"?`)) return;
-
-            delete profiles[activeProfileName];
-            localStorage.setItem('ime_tambang_profiles', JSON.stringify(profiles));
-
-            activeProfileName = 'Default';
-            localStorage.setItem('ime_tambang_active_profile', activeProfileName);
-
-            updateProfileDropdown();
-            applyProfileData(activeProfileName);
-            hitungOptimasi();
-        }
-
-        // ============================================
-        // EXPORT TEKS & GAMBAR (EXPORT UTILITIES)
-        // ============================================
-        function copyIndividualText() {
-            if (!currentIndividualResult || currentIndividualResult.length === 0) {
-                alert("Tidak ada hasil optimasi individual untuk disalin.");
-                return;
-            }
-
-            const timeLimit = getTimeLimitSeconds();
-            const limitStr = timeLimit === Infinity ? "Tanpa Batas" : formatDuration(timeLimit);
-
-            let text = `--- HASIL OPTIMASI INDIVIDU (Ime Tambang) ---\n`;
-            text += `Limit Waktu: ${limitStr}\n`;
-            text += `Sortir Berdasarkan: ${sortModeIndividual === 'profit' ? 'Profit' : 'Efisiensi Waktu'}\n\n`;
-
-            const topItems = currentIndividualResult.slice(0, 10);
-            topItems.forEach((item, index) => {
-                const profitText = item.profitSatuan >= 0 ? `+$${item.profitSatuan.toLocaleString('id-ID')}` : `-$${Math.abs(item.profitSatuan).toLocaleString('id-ID')}`;
-                const totalProfit = item.profitSatuan * item.maxBisa;
-                const totalProfitText = totalProfit >= 0 ? `+$${totalProfit.toLocaleString('id-ID')}` : `-$${Math.abs(totalProfit).toLocaleString('id-ID')}`;
-                const rateText = item.profitPerDetik >= 0 ? `+$${item.profitPerDetik.toFixed(2)}/s` : `-$${Math.abs(item.profitPerDetik).toFixed(2)}/s`;
-
-                text += `${index + 1}. ${item.nama} (Kategori: ${item.category})\n`;
-                text += `   * Bisa Crafting: ${item.maxBisa.toLocaleString('id-ID')} pcs\n`;
-                text += `   * Profit/Pcs: ${profitText} | Total: ${totalProfitText}\n`;
-                text += `   * Durasi Proses: ${item.processing_time} detik (Akumulasi Raw: ${item.processing_time_raw} detik)\n`;
-                text += `   * Rate Efisiensi: ${rateText}\n\n`;
-            });
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Ringkasan hasil optimasi individual berhasil disalin ke clipboard!");
-            }).catch(err => {
-                console.error("Gagal menyalin teks:", err);
-                alert("Gagal menyalin teks ke clipboard.");
-            });
-        }
-
-        function copyComboText() {
-            if (!currentComboResult || !currentComboResult.strategies || currentComboResult.strategies.length === 0) {
-                alert("Tidak ada hasil optimasi combo untuk disalin.");
-                return;
-            }
-
-            const timeLimit = getTimeLimitSeconds();
-            const limitStr = timeLimit === Infinity ? "Tanpa Batas" : formatDuration(timeLimit);
-
-            let text = `--- STRATEGI COMBO CRAFTING (Ime Tambang) ---\n`;
-            text += `Total Profit: +$${currentComboResult.summary.totalProfit.toLocaleString('id-ID')}\n`;
-            text += `Total Durasi: ${formatDuration(currentComboResult.summary.totalDuration)}\n`;
-            text += `Limit Waktu: ${limitStr}\n`;
-            text += `Sortir Berdasarkan: ${sortModeCombo === 'profit' ? 'Profit' : 'Efisiensi Waktu'}\n\n`;
-
-            text += `Daftar Rencana Produksi:\n`;
-            currentComboResult.strategies.forEach((step, index) => {
-                const rawTime = step.processing_time_raw || 0;
-                const totalDur = rawTime * step.jumlah;
-                const rate = rawTime > 0 ? (step.profitSatuan / rawTime) : 0;
-                const rateText = rate >= 0 ? `+$${rate.toFixed(2)}/s` : `-$${Math.abs(rate).toFixed(2)}/s`;
-
-                text += `${index + 1}. ${step.nama} x${step.jumlah}\n`;
-                text += `   * Profit/Pcs: +$${step.profitSatuan.toLocaleString('id-ID')} | Total: +$${step.profitTotal.toLocaleString('id-ID')}\n`;
-                text += `   * Waktu: ${totalDur}s | Rate: ${rateText}\n`;
-            });
-
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Strategi combo berhasil disalin ke clipboard!");
-            }).catch(err => {
-                console.error("Gagal menyalin teks:", err);
-                alert("Gagal menyalin teks ke clipboard.");
-            });
-        }
-
-        function loadHtml2Canvas(callback) {
-            if (window.html2canvas) {
-                callback();
-                return;
-            }
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            script.onload = callback;
-            script.onerror = () => {
-                alert("Gagal memuat library html2canvas dari CDN. Harap periksa koneksi internet Anda.");
-            };
-            document.head.appendChild(script);
-        }
-
-        function exportPanelPNG(panelId, filename) {
-            const originalPanel = document.getElementById(panelId);
-            if (!originalPanel) {
-                alert("Panel tidak ditemukan!");
-                return;
-            }
-
-            loadHtml2Canvas(() => {
-                const clone = originalPanel.cloneNode(true);
-
-                clone.style.position = 'absolute';
-                clone.style.top = '-9999px';
-                clone.style.left = '-9999px';
-                clone.style.height = 'auto';
-                clone.style.maxHeight = 'none';
-                clone.style.width = originalPanel.offsetWidth + 'px';
-                clone.style.overflow = 'visible';
-
-                const listBodyId = panelId === 'panel-individual' ? 'hasil-individual' : 'hasil-combo';
-                const listBody = clone.querySelector(`#${listBodyId}`);
-                if (listBody) {
-                    listBody.style.maxHeight = 'none';
-                    listBody.style.overflowY = 'visible';
-                    listBody.style.height = 'auto';
-                }
-
-                const chevron = clone.querySelector(panelId === 'panel-individual' ? '#chevron-individual' : '#chevron-combo');
-                if (chevron) chevron.style.display = 'none';
-
-                document.body.appendChild(clone);
-
-                html2canvas(clone, {
-                    backgroundColor: '#0d111d',
-                    scale: 2,
-                    logging: false,
-                    useCORS: true
-                }).then(canvas => {
-                    document.body.removeChild(clone);
-
-                    try {
-                        const link = document.createElement('a');
-                        link.download = filename;
-                        link.href = canvas.toDataURL('image/png');
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    } catch (e) {
-                        console.error("Gagal mengunduh gambar:", e);
-                        alert("Gagal mengunduh gambar.");
-                    }
-                }).catch(err => {
-                    console.error("Gagal melakukan capture canvas:", err);
-                    document.body.removeChild(clone);
-                    alert("Gagal memproses gambar.");
-                });
-            });
-        }
-
-        function exportIndividualPNG() {
-            exportPanelPNG('panel-individual', 'optimasi_individual.png');
-        }
-
-        function exportComboPNG() {
-            exportPanelPNG('panel-combo', 'optimasi_combo.png');
-        }
-
-        // ============================================
-        // OCR INVENTORY SCANNER (TESSERACT.JS)
-        // ============================================
-        function toggleOcrZone() {
-            const zone = document.getElementById('ocr-zone');
-            const btn = document.getElementById('btn-toggle-ocr');
-            if (zone.classList.contains('hidden')) {
-                zone.classList.remove('hidden');
-                zone.classList.add('flex');
-                btn.classList.add('bg-teal-500/20', 'text-teal-400', 'border', 'border-teal-500/30');
-            } else {
-                zone.classList.remove('flex');
-                zone.classList.add('hidden');
-                btn.classList.remove('bg-teal-500/20', 'text-teal-400', 'border', 'border-teal-500/30');
-            }
-        }
-
-        function loadTesseract(callback) {
-            if (window.Tesseract) {
-                callback();
-                return;
-            }
-            const script = document.createElement('script');
-            script.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
-            script.onload = callback;
-            script.onerror = () => {
-                alert("Gagal memuat library Tesseract.js OCR dari CDN.");
-            };
-            document.head.appendChild(script);
-        }
-
-        function initOcrListeners() {
-            const dropArea = document.getElementById('ocr-drop-area');
-            const fileInput = document.getElementById('ocr-file-input');
-            if (!dropArea || !fileInput) return;
-
-            dropArea.addEventListener('click', () => fileInput.click());
-
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) {
-                    processOcrImage(e.target.files[0]);
-                }
-            });
-
-            ['dragenter', 'dragover'].forEach(eventName => {
-                dropArea.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    dropArea.classList.add('border-teal-500', 'bg-teal-500/5');
-                }, false);
-            });
-
-            ['dragleave', 'drop'].forEach(eventName => {
-                dropArea.addEventListener(eventName, (e) => {
-                    e.preventDefault();
-                    dropArea.classList.remove('border-teal-500', 'bg-teal-500/5');
-                }, false);
-            });
-
-            dropArea.addEventListener('drop', (e) => {
-                const dt = e.dataTransfer;
-                const files = dt.files;
-                if (files.length > 0) {
-                    processOcrImage(files[0]);
-                }
-            });
-
-            window.addEventListener('paste', (e) => {
-                const zone = document.getElementById('ocr-zone');
-                if (zone && !zone.classList.contains('hidden')) {
-                    const items = e.clipboardData.items;
-                    for (let i = 0; i < items.length; i++) {
-                        if (items[i].type.indexOf('image') !== -1) {
-                            const blob = items[i].getAsFile();
-                            processOcrImage(blob);
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-
-        // Preprocess image: scale up 2.5x, invert, and binarize for better OCR accuracy
-        function preprocessImageForOcr(fileOrBlob, callback) {
-            const img = new Image();
-            const objectUrl = URL.createObjectURL(fileOrBlob);
-            img.onload = function () {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                const scale = 2.5;
-                canvas.width = img.width * scale;
-                canvas.height = img.height * scale;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                const d = imgData.data;
-                for (let i = 0; i < d.length; i += 4) {
-                    // Grayscale + invert + binarize (game uses white text on dark bg)
-                    const gray = 0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2];
-                    const inv = 255 - gray;
-                    const bin = inv < 120 ? 0 : 255;
-                    d[i] = d[i + 1] = d[i + 2] = bin;
-                }
-                ctx.putImageData(imgData, 0, 0);
-                URL.revokeObjectURL(objectUrl);
-                canvas.toBlob(callback, 'image/png');
-            };
-            img.onerror = () => { URL.revokeObjectURL(objectUrl); callback(fileOrBlob); };
-            img.src = objectUrl;
-        }
-
-        function processOcrImage(fileOrBlob) {
-            const statusText = document.getElementById('ocr-status-text');
-            const progressPercent = document.getElementById('ocr-progress-percent');
-            const progressBar = document.getElementById('ocr-progress-bar');
-            const progressContainer = document.getElementById('ocr-progress-container');
-            const dropArea = document.getElementById('ocr-drop-area');
-
-            if (!statusText || !progressPercent || !progressBar || !progressContainer || !dropArea) return;
-
-            progressContainer.classList.remove('hidden');
-            progressContainer.classList.add('flex');
-            statusText.textContent = "Memproses gambar...";
-            progressPercent.textContent = "0%";
-            progressBar.style.width = "0%";
-            dropArea.style.pointerEvents = 'none';
-
-            preprocessImageForOcr(fileOrBlob, function (processedBlob) {
-                loadTesseract(() => {
-                    statusText.textContent = "Menginisialisasi scanner...";
-                    Tesseract.recognize(
-                        processedBlob,
-                        'eng',
-                        {
-                            logger: m => {
-                                if (m.status === 'recognizing text') {
-                                    const percent = Math.round(m.progress * 100);
-                                    statusText.textContent = "Membaca teks screenshot...";
-                                    progressPercent.textContent = `${percent}%`;
-                                    progressBar.style.width = `${percent}%`;
-                                } else {
-                                    statusText.textContent = m.status === 'loading tesseract core' ? "Memuat Core..." : "Mempersiapkan engine...";
-                                }
-                            }
-                        }
-                    ).then(({ data }) => {
-                        statusText.textContent = "Pemindaian selesai! Memproses angka stok...";
-                        setTimeout(() => {
-                            parseOcrText(data);
-                            progressContainer.classList.remove('flex');
-                            progressContainer.classList.add('hidden');
-                            dropArea.style.pointerEvents = 'auto';
-                        }, 800);
-                    }).catch(err => {
-                        console.error("OCR Error:", err);
-                        statusText.textContent = "Terjadi kesalahan pemindaian.";
-                        progressPercent.textContent = "Error";
-                        progressBar.classList.add('bg-red-500');
-                        setTimeout(() => {
-                            progressContainer.classList.remove('flex');
-                            progressContainer.classList.add('hidden');
-                            progressBar.classList.remove('bg-red-500');
-                            dropArea.style.pointerEvents = 'auto';
-                        }, 3000);
-                    });
-                });
-            });
-        }
-
-        function parseOcrText(ocrData) {
-            if (!ocrData) {
-                alert("Tidak ada data hasil scan.");
-                return;
-            }
-
-            const materialsList = [...rawMaterials, ...gems, ...ingots, ...base, ...resources]
-                .map(name => ({ original: name, normalized: name.toLowerCase().replace("aluminium", "aluminum") }))
-                .sort((a, b) => b.normalized.length - a.normalized.length);
-
-            const foundStok = {};
-            let matchCount = 0;
-
-            function getXMid(words) {
-                if (!words || words.length === 0) return 0;
-                let minX = Infinity, maxX = -Infinity;
-                words.forEach(w => {
-                    if (w.bbox.x0 < minX) minX = w.bbox.x0;
-                    if (w.bbox.x1 > maxX) maxX = w.bbox.x1;
-                });
-                return (minX + maxX) / 2;
-            }
-
-            // Primary: 2D word-level neighborhood search
-            // This is robust against Tesseract's bad line grouping on grid layouts.
-            if (ocrData.lines && ocrData.lines.length > 0 && ocrData.words && ocrData.words.length > 0) {
-                const allWords = ocrData.words;
-
-                materialsList.forEach(mat => {
-                    let bestMatch = null;
-
-                    // Step 1: find which line contains the material name
-                    for (let line of ocrData.lines) {
-                        const lineLower = line.text.toLowerCase().replace("aluminium", "aluminum");
-                        if (!lineLower.includes(mat.normalized)) continue;
-
-                        const wordsInLine = line.words;
-                        const matTokens = mat.normalized.split(/\s+/);
-
-                        for (let i = 0; i <= wordsInLine.length - matTokens.length; i++) {
-                            let match = true;
-                            for (let j = 0; j < matTokens.length; j++) {
-                                const wt = wordsInLine[i + j].text.toLowerCase().replace("aluminium", "aluminum");
-                                if (!wt.includes(matTokens[j])) { match = false; break; }
-                            }
-                            if (match) {
-                                // Sub-match guard: reject if the word before this match
-                                // combines with our tokens to form a longer known material.
-                                // e.g. prevent "Sapphire" matching inside "Uncut Sapphire".
-                                if (i > 0) {
-                                    const wordBefore = wordsInLine[i - 1].text.toLowerCase().replace("aluminium", "aluminum");
-                                    const longerName = wordBefore + ' ' + mat.normalized;
-                                    const isSubMatch = materialsList.some(other =>
-                                        other.normalized !== mat.normalized && other.normalized === longerName
-                                    );
-                                    if (isSubMatch) continue;
-                                }
-                                // Also check if any longer variant exists in the full line
-                                // e.g. if "Sapphire" matches but line also contains "Uncut Sapphire"
-                                const fullLineLower = lineLower;
-                                const longerVariantExists = materialsList.some(other =>
-                                    other.normalized !== mat.normalized &&
-                                    other.normalized.includes(mat.normalized) &&
-                                    other.normalized !== mat.normalized &&
-                                    fullLineLower.includes(other.normalized)
-                                );
-                                if (longerVariantExists) continue;
-                                const matchedWords = wordsInLine.slice(i, i + matTokens.length);
-                                bestMatch = { xMid: getXMid(matchedWords), yTop: line.bbox.y0 };
-                                break;
-                            }
-                        }
-                        if (bestMatch) break;
-                    }
-
-                    if (!bestMatch) return;
-
-                    // Step 2: 2D neighborhood search — scan ALL words for the quantity
-                    // The quantity word (e.g. "242x") should be:
-                    //   - vertically ABOVE the name: vDist in [80, 250] pixels
-                    //   - horizontally CLOSE to the name column: hDist < 160 pixels
-                    let bestWord = null;
-                    let minScore = Infinity;
-
-                    allWords.forEach(w => {
-                        const t = w.text.trim();
-                        if (!/^\d/.test(t)) return;                          // must start with a digit
-                        if (/[0-9]+(?:\.\d+)?(?:g|kg|kb|mb|lb)$/i.test(t)) return; // skip weight strings
-
-                        const wMid = (w.bbox.x0 + w.bbox.x1) / 2;
-                        const wBottom = w.bbox.y1;
-                        const vDist = bestMatch.yTop - wBottom;
-                        const hDist = Math.abs(wMid - bestMatch.xMid);
-
-                        if (vDist > 80 && vDist < 250 && hDist < 160) {
-                            const score = hDist + vDist * 0.5;
-                            if (score < minScore) { minScore = score; bestWord = w; }
-                        }
-                    });
-
-                    if (bestWord) {
-                        const qty = parseInt(bestWord.text.match(/\d+/)[0]);
-                        foundStok[mat.original] = qty;
-                        matchCount++;
-                    }
-                });
-            }
-
-            // Fallback: simple line-by-line parsing if 2D search found nothing
-            if (matchCount === 0) {
-                const lines = typeof ocrData === 'string'
-                    ? ocrData.split('\n').map(text => ({ text, words: [] }))
-                    : (ocrData.lines || []);
-
-                lines.forEach(line => {
-                    const lineLower = line.text.toLowerCase().replace("aluminium", "aluminum");
-                    for (let mat of materialsList) {
-                        if (lineLower.includes(mat.normalized)) {
-                            const numbers = line.text.match(/\d+/g);
-                            if (numbers && numbers.length > 0) {
-                                const qty = parseInt(numbers[numbers.length - 1]);
-                                if (foundStok[mat.original] === undefined) {
-                                    foundStok[mat.original] = qty;
-                                    matchCount++;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            if (matchCount === 0) {
-                alert("Pemindaian selesai, tetapi tidak ada nama material yang cocok ditemukan.\n\nPastikan screenshot menampilkan nama barang dengan jelas.");
-                return;
-            }
-
-            let updateSummary = [];
-            Object.entries(foundStok).forEach(([mat, qty]) => {
-                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
-                if (input) {
-                    input.value = qty;
-                    updateSummary.push(`${mat}: ${qty}`);
-                }
-            });
-
-            saveInventoryToStorage();
-            updateTotalStok();
-            hitungOptimasi();
-
-            alert(`Sukses memindai ${matchCount} jenis material dari screenshot:\n\n` + updateSummary.join('\n'));
-        }
-
-        // Fix #8: display "N items" correctly (was showing bare number after initial render)
-        function updateTotalStok() {
-            let totalStok = 0;
-            [...rawMaterials, ...resources].forEach(mat => {
-                const el = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
-                totalStok += el ? (parseInt(el.value) || 0) : 0;
-            });
-            document.getElementById('total-stok').textContent = `${totalStok} items`;
-        }
-
-        function addInputListeners() {
-            [...rawMaterials, ...resources].forEach(mat => {
-                const input = document.getElementById(`input-${mat.replace(/ /g, '_')}`);
-                if (input) {
-                    input.addEventListener('input', () => {
-                        saveInventoryToStorage();
-                        updateTotalStok();
-                    });
-                }
-            });
-        }
-
-        // ============================================
-        // RENDER INPUTS (Generic)
-        // ============================================
-        // Fix #9: replaced 5 near-identical functions with one generic renderer
-        // Fix #4: uses .map().join('') instead of innerHTML += in a loop
-        // Fix #5: uses itemMap.get() for O(1) lookup instead of .find()
-        function renderMaterialGrid(containerId, materials, colorClass, getPriceFn) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = materials.map(mat => {
-                const priceDisplay = getPriceFn ? getPriceFn(mat) : '-';
-                return `
-                    <div class="bg-elevated border border-border rounded-lg p-2.5 flex flex-col items-center">
-                        <input
-                            type="number"
-                            id="input-${mat.replace(/ /g, '_')}"
-                            value="0"
-                            min="0"
-                            class="w-full bg-void border border-border rounded px-1.5 py-1 text-center font-mono font-semibold text-sm ${colorClass} focus:outline-none"
-                            onfocus="if(this.value==='0'){this.value=''}" onblur="if(this.value===''){this.value='0'}"
-                        >
-                        <span class="text-[11px] text-txt-muted mt-1 text-center leading-tight">${mat}</span>
-                        <span class="text-[10px] text-gold-400 font-mono">${priceDisplay}</span>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderAllGrids() {
-            renderMaterialGrid('input-grid', rawMaterials, 'text-teal-400', mat => {
-                const p = database.raw_sell_prices[mat];
-                return mat === 'Coal' ? `$${p}` : '-';
-            });
-            renderMaterialGrid('input-grid-gems', gems, 'text-pink-400', mat => {
-                const item = itemMap[mat];  // O(1) lookup
-                return item ? `$${item.sell_price}` : '-';
-            });
-            renderMaterialGrid('input-grid-ingots', ingots, 'text-cyan-400', mat => {
-                const item = itemMap[mat];  // O(1) lookup
-                return item ? `$${item.sell_price}` : '-';
-            });
-            renderMaterialGrid('input-grid-base', base, 'text-yellow-400', null);
-            renderMaterialGrid('input-grid-resources', resources, 'text-teal-400', mat => {
-                const p = database.raw_sell_prices[mat];
-                return p !== undefined ? `$${p}` : '-';
-            });
-        }
-
-        // ============================================
-        // OPTIMIZATION ALGORITHM
-        // ============================================
-
-        // Alias mapping: some materials can be substituted with another
-        const materialAliases = {
-            'Uncut Ruby': 'Ruby',
-            'Uncut Emerald': 'Emerald',
-            'Uncut Sapphire': 'Sapphire',
-            'Uncut Diamond': 'Diamond',
-            'Ruby': 'Uncut Ruby',
-            'Emerald': 'Uncut Emerald',
-            'Sapphire': 'Uncut Sapphire',
-            'Diamond': 'Uncut Diamond'
-        };
-
-        // Build recipe lookup map for quick access
-        function buildRecipeMap() {
-            const map = {};
-            database.items.forEach(item => {
-                const recipe = database.recipes.find(r => r.name === item.name);
-                if (recipe) {
-                    map[item.name] = recipe.ingredients;
-                }
-            });
-            return map;
-        }
-
-        let recipeMap = {};
-
-        // Calculate expanded stock including all intermediate materials that can be made
-        // Optimized: tracks expanded items to prevent infinite loops instead of skipping non-zero stocks
-        function getExpandedStock(stokUser) {
-            const expanded = { ...stokUser };
-            const expandedItems = new Set();
-
-            // Keep expanding until no new materials can be made
-            let changed = true;
-            let iterations = 0;
-            const maxIterations = 20; // Prevent infinite loops
-
-            while (changed && iterations < maxIterations) {
-                changed = false;
-                iterations++;
-
-                for (let [itemName, recipe] of Object.entries(recipeMap)) {
-                    // Skip if this item has already been expanded
-                    if (expandedItems.has(itemName)) continue;
-
-                    // Skip if this item has no recipe (raw materials)
-                    if (!recipe || Object.keys(recipe).length === 0) continue;
-
-                    // Check for aliases to avoid double-counting stock
-                    const alias = materialAliases[itemName];
-                    if (!expanded[itemName] && alias && expanded[alias]) {
-                        continue;
-                    }
-
-                    // Check if we can make this item
-                    let maxCanMake = Infinity;
-                    for (let [bahan, qty] of Object.entries(recipe)) {
-                        // Use getAvailableStockWithExpanded which looks at both direct and aliases
-                        const tersedia = getAvailableStockWithAliases(expanded, bahan);
-                        const canMake = Math.floor(tersedia / qty);
-                        if (canMake < maxCanMake) maxCanMake = canMake;
-                    }
-
-                    if (maxCanMake > 0) {
-                        expanded[itemName] = (expanded[itemName] || 0) + maxCanMake;
-                        expandedItems.add(itemName);
-                        changed = true;
-                    }
-                }
-            }
-
-            return expanded;
-        }
-
-        // Get available stock with alias support
-        function getAvailableStockWithAliases(stokUser, bahan) {
-            if ((stokUser[bahan] || 0) > 0) return stokUser[bahan];
-            const alias = materialAliases[bahan];
-            if (alias && (stokUser[alias] || 0) > 0) return stokUser[alias];
-            return 0;
-        }
-
-        // Get available stock, considering aliases
-        function getAvailableStock(stokUser, bahan) {
-            // Direct check first
-            if ((stokUser[bahan] || 0) > 0) return stokUser[bahan];
-
-            // Check alias
-            const alias = materialAliases[bahan];
-            if (alias && (stokUser[alias] || 0) > 0) return stokUser[alias];
-
-            return 0;
-        }
-
-        // Get the actual material name that has stock (for deduction)
-        function getActualMaterialAvailable(stokUser, bahan) {
-            if ((stokUser[bahan] || 0) > 0) return bahan;
-            const alias = materialAliases[bahan];
-            if (alias && (stokUser[alias] || 0) > 0) return alias;
-            return null;
-        }
-
-        // Get recursive raw material cost of an item with memoization
-        function getRawMaterialCost(itemName) {
-            if (!database) return 0;
-            if (rawMaterialCostCache[itemName] !== undefined) {
-                return rawMaterialCostCache[itemName];
-            }
-
-            let cost = 0;
-            // Jika ada harga jual mentah langsung, gunakan itu
-            if (database.raw_sell_prices[itemName] !== undefined) {
-                cost = database.raw_sell_prices[itemName];
-            } else {
-                // Jika tidak, cari dari resep
-                const recipe = recipeMap[itemName];
-                if (recipe && Object.keys(recipe).length > 0) {
-                    for (let [bahan, qty] of Object.entries(recipe)) {
-                        cost += qty * getRawMaterialCost(bahan);
-                    }
-                } else {
-                    // Jika tidak ada di resep tapi ada di items, gunakan sell_price
-                    const item = itemMap[itemName];
-                    if (item) {
-                        cost = item.sell_price;
-                    }
-                }
-            }
-
-            rawMaterialCostCache[itemName] = cost;
-            return cost;
-        }
-
-        // Get price for a material (considering aliases for pricing)
-        function getMaterialPrice(bahan) {
-            // Direct lookup first
-            const item = database.items.find(i => i.name === bahan);
-            if (item) return item.sell_price;
-
-            // Check if this material is an alias - get price from the original
-            const alias = materialAliases[bahan];
-            if (alias) {
-                const aliasItem = database.items.find(i => i.name === alias);
-                if (aliasItem) return aliasItem.sell_price;
-            }
-
-            // Fallback to raw_sell_prices
-            return database.raw_sell_prices[bahan] || 0;
-        }
-
-        function hitungProfitPerPcs(strategi) {
-            let modal = 0;
-            for (let [bahan, qty] of Object.entries(strategi.ingredients)) {
-                const price = getRawMaterialCost(bahan);
-                modal += qty * price;
-            }
-            return strategi.sell_price - modal;
-        }
-
-        // Fix #7: uses cached processedItems instead of re-filtering each call
-        function hitungIndividualRankings(stokUser) {
-            const timeLimit = getTimeLimitSeconds();
-            // Expand stock to include intermediate materials that can be made
-            const expandedStok = getExpandedStock(stokUser);
-
-            let results = processedItems.map(strategi => {
-                const profitSatuan = hitungProfitPerPcs(strategi);
-                const steps = strategi.processing_steps || 0;
-                const time = strategi.processing_time || 0;
-                const rawTime = strategi.processing_time_raw || 0;
-                const profitPerDetik = rawTime > 0 ? (profitSatuan / rawTime) : 0;
-
-                let maxBisa = Infinity;
-                let bahanKekurangan = null;
-
-                for (let [bahan, butuhQty] of Object.entries(strategi.ingredients)) {
-                    const tersedia = getAvailableStockWithAliases(expandedStok, bahan);
-                    const hitung = Math.floor(tersedia / butuhQty);
-                    if (hitung < maxBisa) {
-                        maxBisa = hitung;
-                        bahanKekurangan = bahan;
-                    }
-                }
-
-                // Apply time limit constraint to maxBisa
-                if (maxBisa > 0 && rawTime > 0 && timeLimit !== Infinity) {
-                    const maxByTime = Math.floor(timeLimit / rawTime);
-                    if (maxByTime < maxBisa) {
-                        maxBisa = maxByTime;
-                        if (maxBisa === 0) {
-                            bahanKekurangan = "Limit Waktu";
-                        }
-                    }
-                }
-
-                return {
-                    nama: strategi.name,
-                    category: strategi.category,
-                    sellPrice: strategi.sell_price,
-                    profitSatuan,
-                    profitPerDetik,
-                    maxBisa: maxBisa === Infinity ? 9999 : maxBisa,
-                    bahanKekurangan: maxBisa === 0 ? (bahanKekurangan || "Limit Waktu") : null,
-                    ingredients: strategi.ingredients,
-                    processing_steps: steps,
-                    processing_time: time,
-                    processing_time_raw: rawTime
-                };
-            });
-
-            results = results.filter(r => r.maxBisa > 0);
-
-            const sortMode = sortModeIndividual;
-            if (sortMode === 'time') {
-                results.sort((a, b) => b.profitPerDetik - a.profitPerDetik);
-            } else {
-                results.sort((a, b) => b.profitSatuan - a.profitSatuan);
-            }
-            return results;
-        }
-
-        // Fix #3: categoryProfit NaN fixed — uses (x || 0) + n pattern
-        // Fix #7: uses cached processedItems
-        // Fix #15: removed unused remainingMaterials variable
-        function hitungComboGreedy(stokUser) {
-            const sortMode = sortModeCombo;
-            const timeLimit = getTimeLimitSeconds();
-            // Expand stock to include intermediate materials that can be made
-            const expandedStok = getExpandedStock(stokUser);
-
-            let strategies = processedItems.map(s => {
-                const profitSatuan = hitungProfitPerPcs(s);
-                const rawTime = s.processing_time_raw || 0;
-                const profitPerDetik = rawTime > 0 ? (profitSatuan / rawTime) : 0;
-                return {
-                    ...s,
-                    profitSatuan,
-                    profitPerDetik,
-                    processing_time_raw: rawTime
-                };
-            });
-
-            if (sortMode === 'time') {
-                strategies.sort((a, b) => b.profitPerDetik - a.profitPerDetik);
-            } else {
-                strategies.sort((a, b) => b.profitSatuan - a.profitSatuan);
-            }
-
-            let stokTersisa = { ...expandedStok };
-            let comboResults = [];
-            let categoryProfit = {};
-            let totalBahanTerpakai = 0;
-            let totalHargaMentah = 0;
-            let totalDuration = 0;
-            const totalBahanAwal = Object.values(stokUser).reduce((s, v) => s + v, 0);
-
-            // Inner helper to avoid code duplication between Phase 1 and Phase 2
-            function processStrategy(strategi) {
-                if (timeLimit !== Infinity && totalDuration >= timeLimit) return;
-
-                let maxBisa = Infinity;
-                for (let [bahan, qty] of Object.entries(strategi.ingredients)) {
-                    const hitung = Math.floor(getAvailableStock(stokTersisa, bahan) / qty);
-                    if (hitung < maxBisa) maxBisa = hitung;
-                }
-
-                // Apply remaining time limit constraint
-                if (maxBisa > 0 && strategi.processing_time_raw > 0 && timeLimit !== Infinity) {
-                    const remainingTime = timeLimit - totalDuration;
-                    const maxByTime = Math.floor(remainingTime / strategi.processing_time_raw);
-                    if (maxByTime < maxBisa) maxBisa = maxByTime;
-                }
-
-                if (maxBisa <= 0) return;
-
-                const profitTotal = strategi.profitSatuan * maxBisa;
-                let modalStrategi = 0;
-                const rincian = [];
-
-                for (let [bahan, qty] of Object.entries(strategi.ingredients)) {
-                    // Deduct from the actual material we have (original or alias)
-                    const actualMaterial = getActualMaterialAvailable(stokTersisa, bahan);
-                    if (actualMaterial) {
-                        stokTersisa[actualMaterial] = (stokTersisa[actualMaterial] || 0) - qty * maxBisa;
-                    }
-                    modalStrategi += qty * getRawMaterialCost(bahan);
-                    rincian.push(`${qty * maxBisa}x ${bahan}`);
-                    totalBahanTerpakai += qty * maxBisa;
-                }
-
-                totalDuration += (strategi.processing_time_raw || 0) * maxBisa;
-
-                comboResults.push({
-                    nama: strategi.name,
-                    category: strategi.category,
-                    sellPrice: strategi.sell_price,
-                    ingredients: strategi.ingredients,
-                    jumlah: maxBisa,
-                    profitSatuan: strategi.profitSatuan,
-                    profitTotal,
-                    modalTotal: modalStrategi * maxBisa,
-                    rincian: rincian.join(' + '),
-                    processing_steps: strategi.processing_steps,
-                    processing_time: strategi.processing_time,
-                    processing_time_raw: strategi.processing_time_raw
-                });
-
-                // Fix #3: safe accumulation — avoids undefined += number → NaN
-                categoryProfit[strategi.category] = (categoryProfit[strategi.category] || 0) + profitTotal;
-                totalHargaMentah += modalStrategi * maxBisa;
-            }
-
-            // Phase 1: profitable strategies first
-            for (let strategi of strategies) {
-                if (strategi.profitSatuan <= 0) continue;
-                processStrategy(strategi);
-            }
-
-            // Phase 2: loss-making strategies to use remaining materials
-            for (let strategi of strategies) {
-                if (strategi.profitSatuan > 0) continue;
-                const usesRemaining = Object.keys(strategi.ingredients)
-                    .some(bahan => getAvailableStock(stokTersisa, bahan) > 0);
-                if (usesRemaining) processStrategy(strategi);
-            }
-
-            const totalProfit = comboResults.reduce((s, i) => s + i.profitTotal, 0);
-            const totalProduksi = comboResults.reduce((s, i) => s + i.jumlah, 0);
-
-            return {
-                strategies: comboResults,
-                summary: {
-                    totalProfit,
-                    totalProduksi,
-                    totalHargaMentah,
-                    percentageUsed: totalBahanAwal > 0 ? Math.round((totalBahanTerpakai / totalBahanAwal) * 100) : 0,
-                    categoryProfit,
-                    remainingMaterials: stokTersisa,
-                    totalDuration
-                }
-            };
-        }
-
-
-        // ============================================
-        // NAVIGATION
-        // ============================================
-        function switchNav(tab) {
-            const calcBtn = document.getElementById('nav-calculator');
-            const infoBtn = document.getElementById('nav-iteminfo');
-            const calcLeft = document.querySelector('#panel-calculator .lg\\:w-5\\/12');
-            const calcRight = document.querySelector('#panel-calculator .lg\\:w-7\\/12');
-            const infoPanel = document.getElementById('panel-iteminfo');
-            const statsBar = document.getElementById('stats-bar');
-            const calcControls = document.getElementById('calc-controls');
-
-            if (tab === 'calculator') {
-                calcBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-teal-500/20 text-teal-400 border border-teal-500/30';
-                infoBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated';
-                calcLeft?.classList.remove('hidden');
-                calcRight?.classList.remove('hidden');
-                infoPanel?.classList.add('hidden');
-                statsBar.classList.remove('hidden');
-                calcControls?.classList.remove('hidden');
-                calcControls?.classList.add('flex');
-            } else {
-                infoBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all bg-purple-500/20 text-purple-400 border border-purple-500/30';
-                calcBtn.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg transition-all text-txt-muted hover:text-txt-secondary hover:bg-elevated';
-                calcLeft?.classList.add('hidden');
-                calcRight?.classList.add('hidden');
-                infoPanel?.classList.remove('hidden');
-                statsBar.classList.add('hidden');
-                calcControls?.classList.remove('flex');
-                calcControls?.classList.add('hidden');
-                if (database) {
-                    renderItemInfo();
-                } else {
-                    document.getElementById('iteminfo-container').innerHTML = '<div class="flex items-center justify-center h-full text-txt-muted p-8">Memuat database...</div>';
-                }
-            }
-        }
-
-        // ============================================
-        function renderIndividualResults(results) {
-            currentIndividualResult = results;  // Fix #2: track state here, not via override
-            const container = document.getElementById('hasil-individual');
-
-            document.getElementById('result-count-individual').textContent = `${results.length} items`;
-
-            const profitable = results.filter(r => r.profitSatuan > 0).length;
-            const loss = results.filter(r => r.profitSatuan < 0).length;
-            const breakEven = results.filter(r => r.profitSatuan === 0).length;
-
-            const parts = [`
-                <div class="mb-3 flex gap-2 text-[10.5px]">
-                    <span class="px-2 py-1 rounded bg-emerald-950/50 text-emerald-400">${profitable} Profit</span>
-                    <span class="px-2 py-1 rounded bg-slate-800 text-txt-muted">${breakEven} Break-even</span>
-                    <span class="px-2 py-1 rounded bg-red-950/50 text-red-400">${loss} Rugi</span>
-                </div>
-                <div class="space-y-1.5">`
-            ];
-
-            results.forEach((item, i) => {
-                const colors = CAT_COLORS[item.category] || CAT_COLORS["Ingots"];
-                const isProfitable = item.profitSatuan > 0;
-                const isLoss = item.profitSatuan < 0;
-                const borderColor = isLoss ? 'border-red-900/30' : isProfitable ? (i === 0 ? 'border-teal-500/40' : 'border-border') : 'border-slate-700/50';
-                const profitColor = isLoss ? 'text-red-400' : isProfitable ? 'text-emerald-400' : 'text-txt-muted';
-
-                const ingredientsHtml = Object.entries(item.ingredients).map(([bahan, qty]) => {
-                    const isRaw = rawMaterials.includes(bahan);
-                    return `<span class="inline-flex items-center gap-0.5 ${isRaw ? 'text-orange-400' : 'text-emerald-400'}">${qty}x ${bahan}</span>`;
-                }).join('<span class="text-txt-muted mx-1">+</span>');
-
-                const rateColor = item.profitPerDetik >= 0 ? 'text-teal-400' : 'text-red-400';
-                const rateSign = item.profitPerDetik >= 0 ? '+' : '';
-
-                parts.push(`
-                    <div class="bg-elevated border ${borderColor} rounded-lg p-2.5">
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-2">
-                                <span class="text-[10.5px] font-mono text-txt-muted w-6">${i + 1}.</span>
-                                <span class="text-[10.5px] px-2 py-0.5 rounded-full font-semibold ${colors.bg} ${colors.text}">${item.category}</span>
-                                ${i === 0 && isProfitable ? '<span class="text-[9.5px] px-1.5 py-0.5 rounded bg-teal-950 text-teal-300 font-bold">BEST</span>' : ''}
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-[10.5px] text-txt-muted">Sell: $${item.sellPrice}</span>
-                                <span class="font-mono font-semibold text-[12.5px] ${profitColor}">${isProfitable ? '+' : ''}$${item.profitSatuan.toFixed(1)}</span>
-                            </div>
-                        </div>
-                        <div class="mt-1.5 text-xs text-txt-primary font-semibold">${item.nama}</div>
-                        <div class="mt-1.5 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[10.5px]">
-                            <span class="text-txt-muted">Bahan:</span>
-                            ${ingredientsHtml}
-                        </div>
-                        <div class="mt-1.5 flex items-center justify-between text-[10.5px]">
-                            <span class="${item.bahanKekurangan ? 'text-red-400' : 'text-txt-muted'}">
-                                ${item.bahanKekurangan ? `Butuh: ${item.bahanKekurangan}` : `Max: ${item.maxBisa === 9999 ? 'unlimited' : item.maxBisa} pcs`}
-                            </span>
-                            ${item.processing_steps > 0 ? `
-                            <span class="text-txt-muted font-mono flex items-center gap-1.5">
-                                <span>Proses: ${item.processing_steps}x</span>
-                                <span>|</span>
-                                <span>Rate: <span class="${rateColor} font-bold">${rateSign}$${item.profitPerDetik.toFixed(2)}/s</span></span>
-                            </span>
-                            ` : ''}
-                        </div>
-                    </div>
-                `);
-            });
-
-            parts.push('</div>');
-            container.innerHTML = parts.join('');
-        }
-
-        function renderComboResults(result) {
-            currentComboResult = result;          // Fix #2: track state here, not via override
-            completedComboItems.clear();
-
-            const container = document.getElementById('hasil-combo');
-            const { summary, strategies } = result;
-
-            const totalPenjualan = summary.totalProfit + summary.totalHargaMentah;
-            document.getElementById('stat-penjualan').textContent = `$${totalPenjualan.toLocaleString()}`;
-            document.getElementById('stat-profit').textContent = `$${summary.totalProfit.toLocaleString()}`;
-            document.getElementById('stat-modal').textContent = `$${summary.totalHargaMentah.toLocaleString()}`;
-            document.getElementById('stat-used').textContent = `${summary.percentageUsed}%`;
-            document.getElementById('stat-production').textContent = `${summary.totalProduksi}`;
-            document.getElementById('stat-strategies').textContent = strategies.length;
-            document.getElementById('result-count').innerHTML = `${strategies.length} strategies <span class="text-teal-400 font-mono font-bold ml-1.5">(${formatDuration(summary.totalDuration)})</span>`;
-
-            if (strategies.length === 0) {
-                container.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-center">
-                        <div class="w-12 h-12 rounded-xl bg-red-950/30 flex items-center justify-center mb-2">
-                            <svg class="w-6 h-6 text-red-400/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                const errorHtml = `
+                    <div class="col-span-2 sm:col-span-3 lg:col-span-3 text-center text-red-400 text-xs py-6 flex flex-col items-center gap-3">
+                        <svg class="w-8 h-8 text-red-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <div class="font-semibold">Gagal memuat database secara otomatis (CORS / Protokol file://)</div>
+                        <p class="text-[10px] text-txt-muted max-w-xs leading-relaxed">Silakan pilih file <code>smelting_database.json</code> secara manual untuk melanjutkan penggunaan offline.</p>
+                        <label class="bg-teal-600 hover:bg-teal-500 text-white font-semibold px-4 py-2 rounded-lg cursor-pointer transition-all text-xs flex items-center gap-1.5 shadow-lg shadow-teal-950/20">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                             </svg>
-                        </div>
-                        <h3 class="text-sm font-medium text-txt-secondary mb-1">Tidak Ada Strategi</h3>
-                        <p class="text-[10px] text-txt-muted">Stok tidak mencukupi.</p>
+                            Pilih smelting_database.json
+                            <input type="file" id="db-file-input" accept=".json" class="hidden" onchange="loadDatabaseManual(event)">
+                        </label>
                     </div>
                 `;
-                return;
+                const gridIds = ['input-grid', 'input-grid-gems', 'input-grid-ingots', 'input-grid-resources'];
+                gridIds.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (id === 'input-grid') el.innerHTML = errorHtml;
+                        else el.innerHTML = '';
+                    }
+                });
             }
-
-            const parts = ['<div class="space-y-2">'];
-
-            strategies.forEach((item, i) => {
-                const colors = CAT_COLORS[item.category] || CAT_COLORS["Ingots"];
-                const isProfitable = item.profitSatuan > 0;
-                const isLoss = item.profitSatuan < 0;
-                const isFirst = i === 0 && isProfitable;
-                const borderColor = isLoss ? 'border-red-900/40' : isFirst ? 'border-teal-500/40' : 'border-border';
-                const profitColor = isLoss ? 'text-red-400' : 'text-emerald-400';
-                const statusBadge = isLoss
-                    ? '<span class="text-[9.5px] px-2 py-0.5 rounded-full font-bold bg-red-950 text-red-300">RUGI</span>'
-                    : isFirst
-                        ? '<span class="text-[9.5px] px-2 py-0.5 rounded-full font-bold bg-teal-950 text-teal-300">BEST</span>'
-                        : '';
-
-                parts.push(`
-                    <div class="bg-elevated border ${borderColor} rounded-lg p-3 cursor-pointer hover:border-purple-500/40 transition-all" data-combo-index="${i}" id="combo-item-${i}">
-                        <div class="flex items-start justify-between gap-2">
-                            <div class="flex-1 min-w-0">
-                                <div class="flex items-center gap-1.5 mb-0.5">
-                                    <span class="text-[10.5px] font-mono ${isProfitable ? 'text-emerald-400' : 'text-red-400'}">#${i + 1}</span>
-                                    <span class="text-[10.5px] px-2 py-0.5 rounded-full font-semibold ${colors.bg} ${colors.text}">${item.category}</span>
-                                    ${statusBadge}
-                                    <span class="text-[10.5px] px-1.5 py-0.5 rounded-full bg-purple-950/50 text-purple-300" id="combo-status-${i}"></span>
-                                </div>
-                                <h4 class="text-[13px] font-semibold text-txt-primary mt-1">${item.nama}</h4>
-                            </div>
-                            <div class="text-right shrink-0">
-                                <p class="text-[10.5px] text-txt-muted">Total Profit</p>
-                                <p class="font-bold font-mono text-base ${profitColor}">${isProfitable ? '+' : ''}$${item.profitTotal.toLocaleString()}</p>
-                            </div>
-                        </div>
-                        <div class="mt-2 flex flex-wrap items-center gap-x-1 gap-y-0.5 text-[11px]">
-                            <span class="text-txt-muted">Bahan:</span>
-                            ${item.rincian}
-                        </div>
-                        <div class="mt-2.5 pt-2.5 border-t border-border/50 grid grid-cols-5 gap-1 text-xs font-mono leading-tight">
-                            <div class="flex flex-col">
-                                <span class="text-txt-muted text-[10px]">Jumlah</span>
-                                <span class="text-cyan-400 font-semibold mt-0.5">${item.jumlah} pcs</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-txt-muted text-[10px]">Harga</span>
-                                <span class="text-gold-400 font-semibold mt-0.5">$${item.sellPrice || 0}</span>
-                            </div>
-                            <div class="flex flex-col">
-                                <span class="text-txt-muted text-[10px]">P/Pcs</span>
-                                <span class="text-emerald-400 font-semibold mt-0.5">${item.profitSatuan >= 0 ? '+' : ''}$${item.profitSatuan.toFixed(0)}</span>
-                            </div>
-                            <div class="flex flex-col font-semibold">
-                                <span class="text-txt-muted text-[10px]">Waktu</span>
-                                <span class="text-teal-400 mt-0.5">${formatDuration(item.processing_time_raw * item.jumlah)}</span>
-                            </div>
-                            <div class="flex flex-col font-semibold">
-                                <span class="text-txt-muted text-[10px]">Rate</span>
-                                <span class="text-teal-300 mt-0.5">${item.profitSatuan >= 0 ? '+$' : '-$'}${Math.abs(item.profitSatuan / item.processing_time_raw).toFixed(2)}/s</span>
-                            </div>
-                        </div>
-                    </div>
-                `);
-            });
-
-            parts.push('</div>');
-            container.innerHTML = parts.join('');
         }
 
-        // ============================================
-        // COMBO ITEM TRACKING
-        // ============================================
-        function confirmAllPending() {
-            if (pendingComboItems.size === 0) return;
+        function loadDatabaseManual(event) {
+            const file = event.target.files[0];
+            if (!file) return;
 
-            pendingComboItems.forEach(index => {
-                const item = currentComboResult.strategies[index];
-                if (!item) return;
-                completedComboItems.add(index);
-                for (let [bahan, qty] of Object.entries(item.ingredients)) {
-                    const input = document.getElementById('input-' + bahan.replace(/ /g, '_'));
-                    if (input) input.value = Math.max(0, (parseInt(input.value) || 0) - qty * item.jumlah);
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const rawDb = JSON.parse(e.target.result);
+                    parseAndLoadDatabase(rawDb);
+                } catch (err) {
+                    alert("Format database JSON tidak valid!");
                 }
-            });
-
-            saveInventoryToStorage();
-
-            pendingComboItems.forEach(index => {
-                const card = document.getElementById('combo-item-' + index);
-                const badge = document.getElementById('combo-status-' + index);
-                if (card) { card.classList.add('opacity-50', 'line-through'); card.classList.remove('border-yellow-500/40', 'hover:border-purple-500/40'); }
-                if (badge) badge.textContent = '✓ DONE';
-            });
-
-            pendingComboItems.clear();
-            hideConfirmButtons();
-            recalculateIndividual();
+            };
+            reader.readAsText(file);
         }
 
-        function cancelAllPending() {
-            pendingComboItems.forEach(index => {
-                const card = document.getElementById('combo-item-' + index);
-                if (card) card.classList.remove('border-yellow-500/40');
-            });
-            pendingComboItems.clear();
-            hideConfirmButtons();
-        }
+        function parseAndLoadDatabase(rawDb) {
+            // Build recipe lookup map
+            const recipeLookup = {};
+            rawDb.recipes.forEach(r => { recipeLookup[r.name] = r.ingredients; });
 
-        function showConfirmButtons() {
-            let btns = document.getElementById('confirm-combo-btns');
-            if (!btns) {
-                btns = document.createElement('div');
-                btns.id = 'confirm-combo-btns';
-                btns.className = 'flex gap-2';
-                const resultCount = document.getElementById('result-count');
-                if (resultCount?.parentNode) resultCount.parentNode.insertBefore(btns, resultCount.nextSibling);
-            }
-            btns.innerHTML = `
-                <button onclick="confirmAllPending()" class="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-500 text-white text-[9px] font-bold rounded flex items-center gap-1">
-                    <span>✓</span> Confirm
-                </button>
-                <button onclick="cancelAllPending()" class="px-2 py-0.5 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold rounded flex items-center gap-1">
-                    <span>✗</span> Cancel
-                </button>
-            `;
-        }
+            database = {
+                raw_sell_prices: rawDb.raw_sell_prices,
+                items: rawDb.items.map(item => ({
+                    ...item,
+                    ingredients: recipeLookup[item.name] || {}
+                }))
+            };
 
-        function hideConfirmButtons() {
-            document.getElementById('confirm-combo-btns')?.remove();
-        }
+            // Quick lookup mapping for items
+            itemMap = {};
+            rawMaterialCostCache = {}; // Reset cost cache
+            database.items.forEach(i => { itemMap[i.name] = i; });
 
-        function completeComboItem(index) {
-            if (!currentComboResult) return;
-            const item = currentComboResult.strategies[index];
-            if (!item) return;
-
-            if (completedComboItems.has(index)) {
-                completedComboItems.delete(index);
-                for (let [bahan, qty] of Object.entries(item.ingredients)) {
-                    const input = document.getElementById('input-' + bahan.replace(/ /g, '_'));
-                    if (input) input.value = (parseInt(input.value) || 0) + qty * item.jumlah;
-                }
-                const card = document.getElementById('combo-item-' + index);
-                const badge = document.getElementById('combo-status-' + index);
-                if (card) { card.classList.remove('opacity-50', 'line-through'); card.classList.add('hover:border-purple-500/40'); }
-                if (badge) badge.textContent = '';
-                saveInventoryToStorage();
-                recalculateIndividual();
-                return;
+            // Dynamically load material aliases if present
+            if (rawDb.aliases) {
+                materialAliases = rawDb.aliases;
             }
 
-            const card = document.getElementById('combo-item-' + index);
-            if (pendingComboItems.has(index)) {
-                pendingComboItems.delete(index);
-                card?.classList.remove('border-yellow-500/40');
-            } else {
-                pendingComboItems.add(index);
-                card?.classList.add('border-yellow-500/40');
-            }
-            pendingComboItems.size > 0 ? showConfirmButtons() : hideConfirmButtons();
-        }
-
-        // Fix #11: uses getStokUser() helper instead of repeating the forEach pattern
-        function recalculateIndividual() {
-            renderIndividualResults(hitungIndividualRankings(getStokUser()));
-        }
-
-        // ============================================
-        // ITEM INFO
-        // Fix #6: debounced render for search input
-        // Fix #4: uses .map().join('') for batched DOM write
-        // ============================================
-        const debouncedRenderItemInfo = debounce(() => renderItemInfo(), 200);
-
-        function renderItemInfo() {
-            const container = document.getElementById('iteminfo-container');
-            if (!database) return;
-
-            const items = database.items.map(s => {
-                const ingredients = [];
-                for (let [bahan, qty] of Object.entries(s.ingredients)) {
-                    ingredients.push({ nama: bahan, qty });
-                }
-                const totalCost = getRawMaterialCost(s.name);
-                const hasIngredients = ingredients.length > 0;
-                const profit = hasIngredients ? s.sell_price - totalCost : 0;
-                const margin = hasIngredients && totalCost > 0 ? (profit / totalCost * 100) : 0;
-                return { ...s, totalCost, profit, margin, ingredients };
-            });
-
-            let filtered = [...items];
-            if (itemInfoFilter.category !== 'semua') filtered = filtered.filter(i => i.category === itemInfoFilter.category);
-            if (itemInfoFilter.search) {
-                const q = itemInfoFilter.search.toLowerCase();
-                filtered = filtered.filter(i => i.name.toLowerCase().includes(q));
-            }
-            filtered.sort((a, b) => {
-                if (itemInfoFilter.sort === 'margin-desc') return b.margin - a.margin;
-                if (itemInfoFilter.sort === 'margin-asc') return a.margin - b.margin;
-                if (itemInfoFilter.sort === 'price-desc') return b.sell_price - a.sell_price;
-                if (itemInfoFilter.sort === 'price-asc') return a.sell_price - b.sell_price;
-                if (itemInfoFilter.sort === 'profit-desc') return b.profit - a.profit;
-                return a.profit - b.profit;
-            });
-
-            const profitable = items.filter(i => i.profit > 0).length;
-
-            // Derive CSS string from global CAT_COLORS for Item Info card badges
-            const catCss = Object.fromEntries(
-                Object.entries(CAT_COLORS).map(([k, v]) => [k, `${v.bg} ${v.text}`])
+            // Cache craftable items
+            processedItems = database.items.filter(item =>
+                item.ingredients && Object.keys(item.ingredients).length > 0 && item.category !== 'Base'
             );
 
-            const catButtons = ['semua', 'Raw', 'Ingots', 'Gems', 'Base', 'Earrings', 'Rings', 'Necklaces', 'Scraps'].map(cat => {
-                const active = itemInfoFilter.category === cat;
-                return `<button onclick="itemInfoFilter.category='${cat}';renderItemInfo()"
-                    class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${active ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30' : 'bg-elevated text-txt-muted border border-transparent hover:text-txt-secondary'}">${cat.charAt(0).toUpperCase() + cat.slice(1)}</button>`;
-            }).join('');
-
-            // Fix #4: build item cards with .map().join('') — one DOM write
-            const itemCards = filtered.map(item => {
-                const colors = catCss[item.category] || catCss["Ingots"];
-                const isP = item.profit > 0;
-                const reqHtml = item.ingredients.map(ing => {
-                    const isR = rawMaterials.includes(ing.nama);
-                    return `<span class="text-[10.5px] px-2 py-0.5 rounded ${isR ? 'bg-orange-950/50 text-orange-400' : 'bg-slate-800 text-txt-secondary'}">${ing.qty}x ${ing.nama}</span>`;
-                }).join('');
-
-                // Show processing info if the item is processed (steps > 0)
-                const processingHtml = item.processing_steps > 0 ? `
-                    <div class="flex justify-between text-[10.5px] mb-2 font-mono text-txt-secondary border-b border-border/30 pb-1.5">
-                        <span>Proses: <span class="text-teal-400">${item.processing_steps}x</span></span>
-                        <span>Durasi: <span class="text-teal-400">${item.processing_time}s</span>${item.processing_steps > 1 ? ` <span class="text-txt-muted">(Raw: ${item.processing_time_raw}s)</span>` : ''}</span>
-                    </div>
-                ` : '';
-
-                const isRaw = item.category === 'Raw';
-                const priceDisplay = isRaw ? '-' : `$${item.sell_price}`;
-                const profitDisplay = isRaw ? '-' : `${isP ? '+' : ''}$${item.profit.toFixed(0)}`;
-                const profitColor = isRaw ? 'text-txt-muted' : (isP ? 'text-emerald-400' : 'text-red-400');
-                const totalDisplay = isRaw ? '-' : `$${item.totalCost}`;
-                const marginDisplay = isRaw ? '-' : `${item.margin.toFixed(1)}%`;
-                const marginColor = isRaw ? 'text-txt-muted' : (isP ? 'text-emerald-400' : 'text-red-400');
-
-                return `<div class="bg-elevated border border-border rounded-xl p-3.5 hover:border-teal-500/30">
-                    <div class="flex justify-between mb-2">
-                        <div>
-                            <span class="text-[10.5px] px-2 py-0.5 rounded font-semibold ${colors}">${item.category}</span>
-                            <h3 class="text-[13px] font-bold text-txt-primary mt-1.5">${item.name}</h3>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xl font-bold font-mono text-txt-primary">${priceDisplay}</p>
-                            <p class="text-[13px] font-bold font-mono ${profitColor}">${profitDisplay}</p>
-                        </div>
-                    </div>
-                    <div class="h-1.5 bg-void rounded-full mb-3 overflow-hidden"><div class="h-full ${isRaw ? 'bg-void' : (isP ? 'bg-emerald-500' : 'bg-red-500')} rounded-full" style="width:${isRaw ? 0 : Math.min(Math.abs(item.margin), 200) / 3}%"></div></div>
-                    ${processingHtml}
-                    <p class="text-[10.5px] text-txt-muted uppercase mb-1">Requirements</p>
-                    <div class="flex flex-wrap gap-1.5 mb-2">${reqHtml}</div>
-                    <div class="flex justify-between pt-2.5 border-t border-border/50 text-[10.5px]">
-                        <span><span class="text-txt-muted">Total: </span><span class="text-orange-400 font-mono">${totalDisplay}</span></span>
-                        <span><span class="text-txt-muted">Margin: </span><span class="${marginColor} font-mono font-semibold">${marginDisplay}</span></span>
-                    </div>
-                </div>`;
-            }).join('');
-
-            container.innerHTML = `<div class="bg-surface border border-border rounded-xl flex flex-col h-full overflow-hidden">
-                <div class="px-4 py-3 border-b border-border bg-elevated/50">
-                    <h2 class="text-base font-bold text-txt-primary mb-3">Item Info &amp; Harga</h2>
-                    <div class="flex flex-wrap gap-2 mb-3">
-                        <div class="flex-1 min-w-[150px]">
-                            <input type="text" id="item-search" placeholder="Q Cari item..." value="${itemInfoFilter.search}"
-                                class="w-full bg-void border border-border rounded-lg px-3 py-1.5 text-[13px] text-txt-primary placeholder-txt-muted focus:outline-none focus:border-teal-500"
-                                oninput="itemInfoFilter.search=this.value;debouncedRenderItemInfo()">
-                        </div>
-                        <select id="item-sort" onchange="itemInfoFilter.sort=this.value;renderItemInfo()"
-                            class="bg-void border border-border rounded-lg px-3 py-1.5 text-[13px] text-txt-primary cursor-pointer">
-                            <option value="margin-desc" ${itemInfoFilter.sort === 'margin-desc' ? 'selected' : ''}>Margin: Tinggi - Rendah</option>
-                            <option value="margin-asc"  ${itemInfoFilter.sort === 'margin-asc' ? 'selected' : ''}>Margin: Rendah - Tinggi</option>
-                            <option value="profit-desc" ${itemInfoFilter.sort === 'profit-desc' ? 'selected' : ''}>Profit: Tinggi - Rendah</option>
-                            <option value="profit-asc"  ${itemInfoFilter.sort === 'profit-asc' ? 'selected' : ''}>Profit: Rendah - Tinggi</option>
-                            <option value="price-desc"  ${itemInfoFilter.sort === 'price-desc' ? 'selected' : ''}>Harga: Tinggi - Rendah</option>
-                            <option value="price-asc"   ${itemInfoFilter.sort === 'price-asc' ? 'selected' : ''}>Harga: Rendah - Tinggi</option>
-                        </select>
-                    </div>
-                    <div class="flex gap-1.5 flex-wrap">${catButtons}</div>
-                </div>
-                <div class="px-4 py-2 border-b border-border bg-elevated/30 flex gap-3 text-xs">
-                    <span class="text-txt-primary"><b>${items.length}</b> TOTAL</span>
-                    <span class="text-emerald-400"><b>${profitable}</b> PROFIT</span>
-                </div>
-                <div class="flex-1 overflow-y-auto p-3">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">${itemCards}</div>
-                </div>
-            </div>`;
-        }
-
-        // ============================================
-        // MAIN
-        // Fix #11: uses getStokUser() helper
-        // ============================================
-        function hitungOptimasi() {
-            if (!database) { alert('Database belum dimuat!'); return; }
-            const stokUser = getStokUser();
-            renderIndividualResults(hitungIndividualRankings(stokUser));
-            renderComboResults(hitungComboGreedy(stokUser));
-        }
-
-        window.onload = loadDatabase;
-
-        // Fix #1: uses consistent STORAGE_KEY via saveInventoryToStorage()
-        document.addEventListener('input', function (e) {
-            if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
-                saveInventoryToStorage();
-                updateTotalStok();
-            }
-        });
-
-        // Event delegation for combo items (unchanged — already efficient)
-        document.addEventListener('click', function (e) {
-            const comboItem = e.target.closest('[data-combo-index]');
-            if (comboItem) {
-                completeComboItem(parseInt(comboItem.getAttribute('data-combo-index')));
-            }
-        });
-
-        // ============================================
-        // DISCORD PROFIL MODAL HANDLERS
-        // ============================================
-        function openDiscordModal(e) {
-            if (e) e.preventDefault();
-            const modal = document.getElementById('discord-modal');
-            const card = document.getElementById('discord-card');
-            if (modal && card) {
-                modal.classList.remove('hidden');
-                // Trigger reflow
-                void modal.offsetWidth;
-                modal.classList.remove('bg-transparent');
-                modal.classList.add('bg-black/60');
-
-                card.classList.remove('scale-95', 'opacity-0');
-                card.classList.add('scale-100', 'opacity-100');
-
-                // Fetch dynamic status from Lanyard API
-                fetchDiscordPresence();
-            }
-        }
-
-        async function fetchDiscordPresence() {
-            const userId = '463409500133523486';
-            try {
-                const response = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
-                if (!response.ok) return; // Fallback to static if 404/not in server
-                const json = await response.json();
-                if (json.success && json.data) {
-                    const data = json.data;
-                    const user = data.discord_user;
-
-                    // Update global name and username
-                    const nameEl = document.querySelector('#discord-card h3');
-                    const tagEl = document.querySelector('#discord-card p');
-                    if (nameEl) nameEl.textContent = user.global_name || user.username;
-                    if (tagEl) tagEl.textContent = `@${user.username}`;
-
-                    // Update avatar
-                    const avatarContainer = document.getElementById('discord-avatar-container');
-                    if (avatarContainer && user.avatar) {
-                        const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${user.avatar.startsWith('a_') ? 'gif' : 'png'}?size=128`;
-                        avatarContainer.innerHTML = `<img src="${avatarUrl}" class="w-16 h-16 rounded-full" alt="Avatar">`;
-                    }
-
-                    // Update status badge
-                    const statusBadge = document.querySelector('#discord-card [title="Online"], #discord-card [title="Offline"], #discord-card [title="Idle"], #discord-card [title="Do Not Disturb"]');
-                    if (statusBadge) {
-                        const statusColors = {
-                            'online': 'bg-[#23a55a]',
-                            'idle': 'bg-[#f0b232]',
-                            'dnd': 'bg-[#f23f43]',
-                            'offline': 'bg-[#80848e]'
-                        };
-                        statusBadge.className = `w-3.5 h-3.5 ${statusColors[data.discord_status] || 'bg-[#80848e]'} rounded-full border-[3px] border-[#1e1f22] absolute bottom-0.5 right-0.5`;
-
-                        const statusNames = {
-                            'online': 'Online',
-                            'idle': 'Idle',
-                            'dnd': 'Do Not Disturb',
-                            'offline': 'Offline'
-                        };
-                        statusBadge.title = statusNames[data.discord_status] || 'Offline';
-                    }
-
-                    // Update custom status/activity if present
-                    const aboutMeContainer = document.querySelector('#discord-card .space-y-2');
-                    if (aboutMeContainer && data.activities && data.activities.length > 0) {
-                        const customStatus = data.activities.find(act => act.type === 4); // custom status
-                        const gameActivity = data.activities.find(act => act.type === 0); // playing game
-
-                        let activityHtml = '';
-                        if (customStatus && customStatus.state) {
-                            activityHtml += `
-                                <div>
-                                    <p class="text-[10px] font-bold text-[#b5bac1] uppercase tracking-wider text-left">Status</p>
-                                    <p class="text-xs text-[#dbdee1] mt-0.5 text-left">${customStatus.emoji ? customStatus.emoji.name + ' ' : ''}${customStatus.state}</p>
-                                </div>
-                            `;
-                        }
-                        if (gameActivity) {
-                            activityHtml += `
-                                <div>
-                                    <p class="text-[10px] font-bold text-[#b5bac1] uppercase tracking-wider text-left">Playing</p>
-                                    <p class="text-xs text-[#dbdee1] mt-0.5 text-left font-semibold">${gameActivity.name}</p>
-                                    ${gameActivity.details ? `<p class="text-[11px] text-[#949ba4] text-left">${gameActivity.details}</p>` : ''}
-                                    ${gameActivity.state ? `<p class="text-[11px] text-[#949ba4] text-left">${gameActivity.state}</p>` : ''}
-                                </div>
-                            `;
-                        }
-
-                        if (activityHtml) {
-                            let activityWrapper = document.getElementById('discord-live-activity');
-                            if (!activityWrapper) {
-                                activityWrapper = document.createElement('div');
-                                activityWrapper.id = 'discord-live-activity';
-                                activityWrapper.className = 'space-y-2 pt-2 border-t border-white/5';
-                                aboutMeContainer.appendChild(activityWrapper);
-                            }
-                            activityWrapper.innerHTML = activityHtml;
-                        }
-                    } else {
-                        // Remove activity block if offline/no activity
-                        const oldAct = document.getElementById('discord-live-activity');
-                        if (oldAct) oldAct.remove();
-                    }
+            // Build recipe map for expanded stock
+            recipeMap = {};
+            database.items.forEach(item => {
+                if (item.ingredients && Object.keys(item.ingredients).length > 0) {
+                    recipeMap[item.name] = item.ingredients;
                 }
-            } catch (err) {
-                console.error('Failed to fetch Discord presence: ', err);
-            }
-        }
-
-        function closeDiscordModal() {
-            const modal = document.getElementById('discord-modal');
-            const card = document.getElementById('discord-card');
-            if (modal && card) {
-                card.classList.remove('scale-100', 'opacity-100');
-                card.classList.add('scale-95', 'opacity-0');
-
-                modal.classList.remove('bg-black/60');
-                modal.classList.add('bg-transparent');
-
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                }, 300);
-            }
-        }
-
-        function copyDiscordUsername() {
-            navigator.clipboard.writeText('jogurii').then(() => {
-                alert("Username Discord 'jogurii' berhasil disalin ke clipboard!");
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
             });
+
+            // Populate category arrays
+            rawMaterials = rawDb.items.filter(i => i.category === 'Raw').map(i => i.name);
+            gems = rawDb.items.filter(i => i.category === 'Gems').map(i => i.name);
+            ingots = rawDb.items.filter(i => i.category === 'Ingots').map(i => i.name);
+            base = rawDb.items.filter(i => i.category === 'Base').map(i => i.name);
+            resources = rawDb.items.filter(i => i.category === 'Scraps').map(i => i.name);
+
+            renderAllGrids();
+            initProfiles();
+            initOcrListeners();
+            addInputListeners();
+            addTimeLimitListeners();
+            updateCalculatorPanels();
+
+            if (document.getElementById('panel-iteminfo') && !document.getElementById('panel-iteminfo').classList.contains('hidden')) {
+                renderItemInfo();
+            }
         }
 
-        // Close modal when clicking outside the card
-        document.addEventListener('mousedown', function (e) {
-            const modal = document.getElementById('discord-modal');
-            const card = document.getElementById('discord-card');
-            if (modal && !modal.classList.contains('hidden') && card && !card.contains(e.target)) {
-                const trigger = e.target.closest('[onclick="openDiscordModal(event)"]');
-                if (!trigger) {
-                    closeDiscordModal();
-                }
+        // ============================================
+        // EVENT INITIALIZATION
+        // ============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDatabase();
+
+            // Register PWA Service Worker for offline support
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('PWA Service Worker registered:', reg.scope))
+                    .catch(err => console.error('PWA Service Worker registration failed:', err));
             }
+
+            // Auto-save inventory on input changes
+            document.addEventListener('input', function (e) {
+                if (e.target.tagName === 'INPUT' && e.target.type === 'number') {
+                    saveInventoryToStorage();
+                    updateTotalStok();
+                }
+            });
+
+            // Event delegation for combo items
+            document.addEventListener('click', function (e) {
+                const comboItem = e.target.closest('[data-combo-index]');
+                if (comboItem) {
+                    completeComboItem(parseInt(comboItem.getAttribute('data-combo-index')));
+                }
+            });
+
+            // Close modal when clicking outside the card
+            document.addEventListener('mousedown', function (e) {
+                const modal = document.getElementById('discord-modal');
+                const card = document.getElementById('discord-card');
+                if (modal && !modal.classList.contains('hidden') && card && !card.contains(e.target)) {
+                    const trigger = e.target.closest('[onclick="openDiscordModal(event)"]');
+                    if (!trigger) {
+                        closeDiscordModal();
+                    }
+                }
+            });
         });
     </script>
 </body>

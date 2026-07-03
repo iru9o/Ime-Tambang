@@ -110,5 +110,16 @@
         { "name": "Sapphire Earring (Silver)", "ingredients": { "Silver Earring": 1, "Sapphire": 2 } },
         { "name": "Diamond Earring (Gold)", "ingredients": { "Gold Earring": 1, "Diamond": 2 } },
         { "name": "Diamond Earring (Silver)", "ingredients": { "Silver Earring": 1, "Diamond": 2 } }
-    ]
+    ],
+    "aliases": {
+        "Uncut Ruby": "Ruby",
+        "Uncut Emerald": "Emerald",
+        "Uncut Sapphire": "Sapphire",
+        "Uncut Diamond": "Diamond",
+        "Ruby": "Uncut Ruby",
+        "Emerald": "Uncut Emerald",
+        "Sapphire": "Uncut Sapphire",
+        "Diamond": "Uncut Diamond"
+    }
 }
+
